@@ -15,16 +15,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --pink: #f4d6d9;
-    --pink-deep: #e3a9b1;
-    --sage: #b7c9b5;
-    --sage-deep: #7f9c7d;
-    --cream: #fbf7f2;
+    --red: #b3202e;        /* đỏ son: màu chủ đạo */
+    --red-dark: #8c1522;
+    --red-soft: #f6dcd8;
+    --gold: #9f7a2c;       /* vàng kim đậm: chữ phụ */
+    --gold-soft: #ecd9a8;
+    --cream: #fdf8f0;
     --paper: #ffffff;
-    --ink: #4a3f44;
-    --ink-soft: #7a6d72;
-    --line: #eadfe0;
-    --shadow: 0 10px 30px rgba(122, 90, 100, .12);
+    --ink: #4a2a2c;
+    --ink-soft: #7d5e5f;
+    --line: #eed9d3;
+    --shadow: 0 10px 30px rgba(140, 30, 40, .12);
     --radius: 18px;
     --script: "Great Vibes", cursive;
     --serif: "Playfair Display", Georgia, serif;
@@ -46,25 +47,42 @@
   h1, h2, h3 { font-weight: 400; margin: 0; }
   a { color: inherit; }
 
-  .container { width: min(760px, 100% - 32px); margin-inline: auto; }
+  .container { width: min(760px, 100% - 32px); margin-inline: auto; position: relative; z-index: 3; }
   section { padding: 72px 0; position: relative; }
+  .flowery { overflow: hidden; }
   .section-title { text-align: center; margin-bottom: 36px; }
-  .section-title .script { font-family: var(--script); font-size: clamp(2.4rem, 8vw, 3.2rem); color: var(--pink-deep); line-height: 1.1; }
-  .section-title .sub { font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; color: var(--sage-deep); margin-top: 6px; }
-  .divider { width: 120px; margin: 18px auto 0; color: var(--sage-deep); }
+  .section-title .script { font-family: var(--script); font-size: clamp(2.4rem, 8vw, 3.2rem); color: var(--red); line-height: 1.1; }
+  .section-title .sub { font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
+  .divider { width: 170px; height: auto; margin: 10px auto 0; }
+
+  /* ---------- Vòng hoa lá ---------- */
+  .garland { position: absolute; pointer-events: none; z-index: 2; overflow: visible; }
+  .g-tl { top: 0; left: 0; transform-origin: 0 0; }
+  .g-tr { top: 0; right: 0; transform-origin: 100% 0; }
+  .g-bl { bottom: 0; left: 0; transform-origin: 0 100%; }
+  .g-br { bottom: 0; right: 0; transform-origin: 100% 100%; }
+  .sec-corner { width: min(210px, 36vw); }
+  .hero-corner { width: min(320px, 28vw); }
+  .env-garland { width: min(300px, 44vw); }
+  .panel-flower { width: clamp(110px, 28vw, 170px); }
+  .panel-flower.g-tl { top: -38px; left: -38px; }
+  .panel-flower.g-br { bottom: -38px; right: -38px; top: auto; }
+  .card-flower { width: 96px; }
+  .card-flower.g-tr { top: -22px; right: -22px; }
+  .card-flower.g-tl { top: -22px; left: -22px; }
 
   /* ---------- Phong bì mở thiệp ---------- */
   #envelope {
-    position: fixed; inset: 0; z-index: 100;
+    position: fixed; inset: 0; z-index: 100; overflow: hidden;
     display: grid; place-items: center;
-    background: linear-gradient(160deg, var(--pink) 0%, var(--cream) 55%, var(--sage) 130%);
+    background: linear-gradient(160deg, var(--red-soft) 0%, var(--cream) 55%, var(--gold-soft) 130%);
     transition: opacity .9s ease, visibility .9s;
   }
   #envelope.opened { opacity: 0; visibility: hidden; }
-  .env-card { text-align: center; padding: 16px; }
+  .env-card { text-align: center; padding: 16px; position: relative; z-index: 3; }
   .env-box {
     width: min(320px, 82vw); aspect-ratio: 3 / 2; margin: 60px auto 28px;
-    position: relative; background: #eec5ca; border-radius: 10px;
+    position: relative; background: #7d1420; border-radius: 10px;
     box-shadow: var(--shadow); perspective: 800px;
     animation: float 3.2s ease-in-out infinite;
   }
@@ -77,87 +95,115 @@
   }
   #envelope.opening .env-letter { transform: translateY(-62%); }
   .env-pocket {
-    position: absolute; inset: 0; z-index: 2; background: var(--paper); border-radius: 10px;
+    position: absolute; inset: 0; z-index: 2; background: var(--red); border-radius: 10px;
     clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
   }
   .env-flap {
     position: absolute; inset: 0 0 auto 0; height: 62%; z-index: 3;
-    background: var(--pink); clip-path: polygon(0 0, 100% 0, 50% 100%);
+    background: var(--red-dark); clip-path: polygon(0 0, 100% 0, 50% 100%);
     transform-origin: top; transition: transform .7s ease, z-index 0s .35s;
   }
   #envelope.opening .env-flap { transform: rotateX(180deg); z-index: 0; }
   .env-seal {
     position: absolute; left: 50%; top: 62%; translate: -50% -50%; z-index: 4;
     width: 56px; height: 56px; border-radius: 50%;
-    background: var(--sage-deep); color: #fff; display: grid; place-items: center;
-    font-family: var(--script); font-size: 1.6rem; box-shadow: 0 4px 10px rgba(0,0,0,.15);
+    background: radial-gradient(circle at 35% 30%, #f3d98e, #c9a24a 70%); color: var(--red-dark);
+    display: grid; place-items: center; font-family: var(--script); font-size: 1.6rem; box-shadow: 0 4px 10px rgba(0,0,0,.15);
     transition: opacity .3s, scale .3s;
   }
   #envelope.opening .env-seal { opacity: 0; scale: .5; }
   #open-btn { animation: pulse 2.2s ease-out infinite; }
   @keyframes float { 50% { transform: translateY(-8px); } }
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(127,156,125,.5); }
-    100% { box-shadow: 0 0 0 18px rgba(127,156,125,0); }
+    0% { box-shadow: 0 0 0 0 rgba(179,32,46,.5); }
+    100% { box-shadow: 0 0 0 18px rgba(179,32,46,0); }
   }
   .env-to { font-size: .8rem; letter-spacing: .25em; text-transform: uppercase; color: var(--ink-soft); }
   .env-names { font-family: var(--script); font-size: clamp(2.4rem, 10vw, 3.4rem); color: var(--ink); margin: 4px 0 20px; }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 12px 26px; border-radius: 999px; border: 1px solid var(--sage-deep);
-    background: var(--sage-deep); color: #fff; font: 500 .9rem var(--sans);
+    padding: 12px 26px; border-radius: 999px; border: 1px solid var(--red);
+    background: var(--red); color: #fff; font: 500 .9rem var(--sans);
     letter-spacing: .05em; cursor: pointer; text-decoration: none;
     transition: transform .2s, background .2s, box-shadow .2s;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(127,156,125,.35); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,32,46,.35); }
   .btn:disabled { opacity: .6; cursor: wait; transform: none; }
-  .btn.ghost { background: transparent; color: var(--sage-deep); }
-  .btn.pink { background: var(--pink-deep); border-color: var(--pink-deep); }
+  .btn.ghost { background: transparent; color: var(--red); }
+  .btn.pink { background: var(--gold); border-color: var(--gold); }
 
-  /* ---------- Hero ---------- */
+  /* ---------- Hero: cảnh biển + mỏm đá ---------- */
   .hero {
-    min-height: 100svh; display: grid; place-items: center; text-align: center;
-    padding: 90px 0 60px;
-    background:
-      radial-gradient(circle at 15% 20%, rgba(244,214,217,.8), transparent 45%),
-      radial-gradient(circle at 85% 80%, rgba(183,201,181,.6), transparent 45%),
-      var(--cream);
-    overflow: hidden;
+    position: relative; min-height: 100svh; overflow: hidden;
+    display: grid; place-items: start center; text-align: center;
+    padding: 8svh 0 32svh;
+    background: #f9d9c8;
   }
-  .hero .floral { position: absolute; width: min(260px, 50vw); color: var(--sage-deep); opacity: .55; }
-  .hero .floral.tl { top: -20px; left: -30px; }
-  .hero .floral.br { bottom: -20px; right: -30px; transform: rotate(180deg); }
-  .kicker { font-size: .8rem; letter-spacing: .4em; text-transform: uppercase; color: var(--sage-deep); }
+  .hero-bg { position: absolute; inset: 0; translate: 0 var(--py, 0px); }
+  .scene, .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero-photo { inset: -4%; width: auto; height: auto; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s; }
+  .hero.has-photo .hero-photo { opacity: 1; animation: kenburns 24s ease-in-out infinite alternate; }
+  .hero.has-photo .scene { opacity: 0; transition: opacity 1.2s; }
+  @keyframes kenburns { to { transform: scale(1.08) translate(-1%, -1%); } }
+
+  .scene .wave { animation: wave var(--t) linear infinite; }
+  @keyframes wave { to { transform: translateX(-1200px); } }
+  .scene .clouds { animation: drift 40s ease-in-out infinite alternate; }
+  @keyframes drift { to { transform: translateX(70px); } }
+  .scene .sun { animation: glow 5s ease-in-out infinite alternate; }
+  @keyframes glow { from { opacity: .8; } to { opacity: 1; } }
+  .scene .glints rect { animation: twinkle 3s ease-in-out infinite; }
+  .scene .glints rect:nth-child(2) { animation-delay: .7s; }
+  .scene .glints rect:nth-child(3) { animation-delay: 1.4s; }
+  .scene .glints rect:nth-child(4) { animation-delay: 2.1s; }
+  @keyframes twinkle { 50% { opacity: .15; } }
+  .scene .gulls { animation: glide 9s ease-in-out infinite alternate; }
+  @keyframes glide { to { transform: translate(40px, -18px); } }
+  .scene .veil { transform-box: fill-box; transform-origin: 100% 0; animation: veil 2.6s ease-in-out infinite alternate; }
+  @keyframes veil { from { transform: rotate(-4deg); } to { transform: rotate(7deg); } }
+  .scene .foam { animation: foam 3.5s ease-in-out infinite; }
+  @keyframes foam { 50% { opacity: .15; } }
+
+  .hero-panel {
+    position: relative; max-width: 560px; margin-inline: auto;
+    padding: 44px 24px 30px; border-radius: 28px;
+    background: rgba(255, 250, 246, .74);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, .85);
+    box-shadow: 0 20px 50px rgba(140, 30, 40, .18);
+  }
+  .hero-panel > :not(.garland) { position: relative; z-index: 3; }
+  .kicker { font-size: .8rem; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); }
   .names {
-    font-family: var(--script); font-size: clamp(3.4rem, 15vw, 6rem); line-height: 1.05;
-    color: var(--ink); margin: 18px 0;
+    font-family: var(--script); font-size: clamp(3.2rem, 14vw, 5.6rem); line-height: 1.05;
+    color: var(--ink); margin: 14px 0;
   }
-  .names .amp { display: block; font-size: .55em; color: var(--pink-deep); }
+  .names .amp { display: block; font-size: .55em; color: var(--red); }
   .hero-date {
     display: inline-flex; align-items: center; gap: 18px;
     font-family: var(--serif); font-size: clamp(1rem, 4vw, 1.25rem); color: var(--ink);
   }
-  .hero-date .big { font-size: 2.6em; line-height: 1; color: var(--pink-deep); }
-  .hero-date .side { border-block: 1px solid var(--line); padding: 4px 10px; text-transform: uppercase; letter-spacing: .15em; font-size: .75em; }
-  .scroll-hint { margin-top: 44px; font-size: .75rem; letter-spacing: .25em; color: var(--ink-soft); text-transform: uppercase; }
-  .scroll-hint span { display: block; margin: 8px auto 0; width: 1px; height: 36px; background: var(--ink-soft); animation: drip 2s infinite; }
+  .hero-date .big { font-size: 2.6em; line-height: 1; color: var(--red); }
+  .hero-date .side { border-block: 1px solid var(--red); padding: 4px 10px; text-transform: uppercase; letter-spacing: .15em; font-size: .75em; }
+  .scroll-hint { margin-top: 26px; font-size: .75rem; letter-spacing: .25em; color: var(--ink-soft); text-transform: uppercase; }
+  .scroll-hint span { display: block; margin: 8px auto 0; width: 1px; height: 30px; background: var(--ink-soft); animation: drip 2s infinite; }
   @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
   /* ---------- Lời mời ---------- */
   .invite { text-align: center; }
   .families { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
-  .family h3 { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--sage-deep); margin-bottom: 8px; font-family: var(--sans); font-weight: 500; }
+  .family h3 { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-family: var(--sans); font-weight: 500; }
   .family p { margin: 0; font-family: var(--serif); }
   .family .addr { font-family: var(--sans); font-size: .85rem; color: var(--ink-soft); margin-top: 6px; }
   .invite-text { font-family: var(--serif); font-style: italic; color: var(--ink-soft); max-width: 520px; margin: 0 auto 26px; }
   .couple { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
   .person .role { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--ink-soft); }
   .person .pname { font-family: var(--script); font-size: clamp(2.2rem, 9vw, 3rem); color: var(--ink); line-height: 1.2; }
-  .couple .heart { color: var(--pink-deep); width: 34px; }
+  .couple .heart { color: var(--red); width: 34px; }
 
   /* ---------- Đếm ngược ---------- */
-  .countdown-wrap { background: linear-gradient(135deg, var(--pink) 0%, #f8e7e3 50%, #dfe8dd 100%); }
+  .countdown-wrap { background: linear-gradient(135deg, var(--red-soft) 0%, #fbeee6 50%, #f6e6c8 100%); }
   .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 520px; margin: 0 auto; }
   .cd-box { background: rgba(255,255,255,.75); border-radius: var(--radius); padding: 18px 6px; text-align: center; box-shadow: var(--shadow); }
   .cd-num { font-family: var(--serif); font-size: clamp(1.8rem, 8vw, 2.6rem); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -165,15 +211,16 @@
   .cd-done { text-align: center; font-family: var(--script); font-size: 2.6rem; color: var(--ink); }
 
   /* ---------- Sự kiện ---------- */
-  .events { display: grid; gap: 20px; }
+  .events { display: grid; gap: 28px; }
   .event {
-    background: var(--paper); border-radius: var(--radius); padding: 28px 24px;
-    box-shadow: var(--shadow); text-align: center; border-top: 4px solid var(--pink);
+    position: relative;
+    background: var(--paper); border-radius: var(--radius); padding: 40px 24px 28px;
+    box-shadow: var(--shadow); text-align: center; border-top: 4px solid var(--red-soft);
   }
-  .event:nth-child(even) { border-top-color: var(--sage); }
+  .event:nth-child(even) { border-top-color: var(--gold-soft); }
   .event h3 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 4px; }
-  .event .host { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--sage-deep); }
-  .event .time { font-family: var(--serif); font-size: 1.9rem; color: var(--pink-deep); margin: 14px 0 0; line-height: 1.2; }
+  .event .host { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); }
+  .event .time { font-family: var(--serif); font-size: 1.9rem; color: var(--red); margin: 14px 0 0; line-height: 1.2; }
   .event .date { font-weight: 500; }
   .event .lunar { font-size: .85rem; color: var(--ink-soft); font-style: italic; }
   .event .place { margin: 14px 0 4px; font-weight: 500; }
@@ -183,7 +230,7 @@
   .map iframe { width: 100%; height: 320px; border: 0; }
 
   /* ---------- Form ---------- */
-  .card { background: var(--paper); border-radius: var(--radius); padding: 28px 22px; box-shadow: var(--shadow); }
+  .card { position: relative; background: var(--paper); border-radius: var(--radius); padding: 40px 22px 28px; box-shadow: var(--shadow); }
   .form { display: grid; gap: 16px; }
   .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   label.field { display: grid; gap: 6px; font-size: .85rem; font-weight: 500; }
@@ -192,7 +239,7 @@
     font: 400 1rem var(--sans); color: var(--ink); background: var(--cream);
     transition: border-color .2s, box-shadow .2s;
   }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--sage-deep); box-shadow: 0 0 0 3px rgba(183,201,181,.4); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,162,74,.4); }
   textarea { resize: vertical; min-height: 100px; }
   fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
   legend { font-size: .85rem; font-weight: 500; margin-bottom: 6px; padding: 0; }
@@ -203,24 +250,24 @@
     display: inline-block; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line);
     background: var(--cream); font-size: .9rem; transition: all .2s;
   }
-  .choice input:checked + span { background: var(--pink); border-color: var(--pink-deep); font-weight: 500; }
-  .choice input:focus-visible + span { box-shadow: 0 0 0 3px rgba(183,201,181,.6); }
+  .choice input:checked + span { background: var(--red-soft); border-color: var(--red); font-weight: 500; }
+  .choice input:focus-visible + span { box-shadow: 0 0 0 3px rgba(201,162,74,.6); }
   .form .btn { justify-self: center; min-width: 200px; }
   .msg { text-align: center; font-size: .9rem; min-height: 1.4em; margin: 0; }
-  .msg.ok { color: var(--sage-deep); font-weight: 500; }
+  .msg.ok { color: var(--gold); font-weight: 500; }
   .msg.err { color: #b4505e; }
   .demo-note { font-size: .78rem; color: var(--ink-soft); text-align: center; background: #fff6e6; border-radius: 10px; padding: 8px 12px; margin: 0 0 16px; }
 
   /* ---------- Lời chúc ---------- */
   .wishes { margin-top: 28px; display: grid; gap: 14px; max-height: 520px; overflow-y: auto; padding: 4px; }
-  .wish { background: var(--paper); border-radius: 14px; padding: 16px 18px; box-shadow: 0 4px 14px rgba(122,90,100,.08); border-left: 3px solid var(--pink); }
-  .wish:nth-child(even) { border-left-color: var(--sage); }
+  .wish { background: var(--paper); border-radius: 14px; padding: 16px 18px; box-shadow: 0 4px 14px rgba(140,30,40,.08); border-left: 3px solid var(--red-soft); }
+  .wish:nth-child(even) { border-left-color: var(--gold-soft); }
   .wish .who { font-weight: 600; }
   .wish .when { font-size: .75rem; color: var(--ink-soft); }
   .wish p { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   .empty { text-align: center; color: var(--ink-soft); font-style: italic; }
 
-  footer { text-align: center; padding: 64px 0 80px; background: linear-gradient(180deg, var(--cream), var(--pink)); }
+  footer { position: relative; text-align: center; padding: 72px 0 110px; background: linear-gradient(180deg, var(--cream), var(--red-soft)); }
   footer .thanks { font-family: var(--script); font-size: clamp(2.4rem, 9vw, 3.4rem); color: var(--ink); }
   footer p { color: var(--ink-soft); margin: 6px 0 0; }
 
@@ -234,6 +281,13 @@
   .reveal[data-anim="right"] { transform: translateX(40px); }
   .reveal[data-anim="zoom"] { transform: scale(.9); }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* Hoa nở từ góc rồi đung đưa */
+  .bloom { opacity: 0; transform: scale(.35) rotate(-6deg); }
+  .bloom.in { animation: bloom 1.4s cubic-bezier(.2,.8,.2,1) var(--d, 0s) forwards, sway 7s ease-in-out calc(var(--d, 0s) + 1.4s) infinite; }
+  .sway { animation: sway 7s ease-in-out infinite; }
+  @keyframes bloom { to { opacity: 1; transform: none; } }
+  @keyframes sway { 0%, 100% { rotate: 0deg; } 30% { rotate: 2deg; } 70% { rotate: -1.5deg; } }
 
   /* ---------- Hero: xuất hiện sau khi mở phong bì ---------- */
   .enter { opacity: 0; transform: translateY(20px); }
@@ -249,21 +303,6 @@
     100% { opacity: 1; transform: none; }
   }
 
-  /* Hoa lá tự vẽ nét rồi đung đưa */
-  .floral { translate: 0 var(--py, 0px); }
-  .floral path { stroke-dasharray: 1; stroke-dashoffset: 1; }
-  .floral circle { opacity: 0; }
-  body.is-open .floral path { animation: draw 2.2s ease-out forwards; }
-  body.is-open .floral path:nth-child(2) { animation-delay: .5s; }
-  body.is-open .floral path:nth-child(3) { animation-delay: .8s; }
-  body.is-open .floral path:nth-child(4) { animation-delay: 1.1s; }
-  body.is-open .floral path:nth-child(5) { animation-delay: 1.4s; }
-  body.is-open .floral circle { animation: rise .8s ease 2s forwards; }
-  body.is-open .floral.tl { animation: sway 7s ease-in-out 2.5s infinite alternate; }
-  body.is-open .floral.br { animation: sway 8s ease-in-out 2.5s infinite alternate-reverse; }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
-  @keyframes sway { from { rotate: -3deg; } to { rotate: 3deg; } }
-
   /* Tim đập */
   .couple .heart { animation: beat 1.6s ease-in-out infinite; }
   @keyframes beat { 0%, 40%, 100% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1.08); } }
@@ -276,13 +315,13 @@
 
   /* Thẻ sự kiện nổi lên khi rê chuột */
   .event { transition: opacity .9s ease var(--d, 0s), transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
-  .event.in:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(122,90,100,.18); }
+  .event.in:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(140,30,40,.18); }
 
   /* Lời chúc trượt vào lần lượt */
   .wish { opacity: 0; animation: slide-in .6s ease var(--d, 0s) forwards; }
   @keyframes slide-in { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
 
-  /* Cánh hoa rơi */
+  /* Cánh hoa và lá rơi */
   #petals { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
   .petal {
     position: absolute; top: -40px; left: var(--x);
@@ -291,6 +330,8 @@
     border-radius: 150% 0 150% 0;
     animation: fall var(--dur) linear var(--delay) infinite;
   }
+  .petal.leaf { height: calc(var(--s) * .45); border-radius: 0 100% 0 100%; background: linear-gradient(135deg, #cddbcb, var(--c)); }
+  .petal.gold { width: calc(var(--s) * .45); height: calc(var(--s) * .45); border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff6d6, var(--c)); }
   @keyframes fall {
     0% { transform: translate(0, 0) rotate(0deg); }
     25% { transform: translate(calc(var(--drift) * .5), 28vh) rotate(calc(var(--spin) * .25)); }
@@ -298,28 +339,135 @@
     100% { transform: translate(var(--drift), 110vh) rotate(var(--spin)); }
   }
 
+  @media (max-width: 700px) {
+    .hero-corner { display: none; }
+  }
   @media (max-width: 520px) {
     section { padding: 56px 0; }
     .families, .row-2 { grid-template-columns: 1fr; }
     .couple { grid-template-columns: 1fr; }
     .couple .heart { margin: 0 auto; }
     .countdown { gap: 8px; }
-    .card { padding: 22px 16px; }
+    .card { padding: 36px 16px 22px; }
+    .hero-panel { padding: 40px 16px 24px; }
+    .panel-flower.g-tl { top: -28px; left: -14px; }
+    .panel-flower.g-br { bottom: -28px; right: -14px; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal, .enter, .wish, .floral circle { opacity: 1; transform: none; }
+    .reveal, .enter, .wish, .bloom { opacity: 1; transform: none; }
     .write { clip-path: none; }
-    .floral path { stroke-dashoffset: 0; }
     #petals { display: none; }
   }
 </style>
 </head>
 <body class="locked">
 
+<!-- Thư viện hoa lá dùng chung (vẽ một lần, tái sử dụng bằng <use>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="leaf">
+      <path d="M0 0 C10 -12 32 -14 50 0 C32 11 10 10 0 0Z" fill="#b7c9b5"/>
+      <path d="M3 0 Q25 -2 47 0" fill="none" stroke="#7f9c7d" stroke-width="1"/>
+    </g>
+    <g id="leaf-dark">
+      <path d="M0 0 C10 -12 32 -14 50 0 C32 11 10 10 0 0Z" fill="#96b194"/>
+      <path d="M3 0 Q25 -2 47 0" fill="none" stroke="#6c8a6a" stroke-width="1"/>
+    </g>
+    <g id="rose">
+      <g fill="#d8434f" stroke="#a8202c" stroke-width="1">
+        <ellipse cy="-17" rx="16" ry="14"/>
+        <ellipse cy="-17" rx="16" ry="14" transform="rotate(72)"/>
+        <ellipse cy="-17" rx="16" ry="14" transform="rotate(144)"/>
+        <ellipse cy="-17" rx="16" ry="14" transform="rotate(216)"/>
+        <ellipse cy="-17" rx="16" ry="14" transform="rotate(288)"/>
+      </g>
+      <circle r="16" fill="#c22f3c" stroke="#9a1b27" stroke-width="1"/>
+      <path d="M-2 -1 C3 -6 9 -1 6 5 C2 11 -8 9 -9 1 C-10 -8 -1 -14 8 -11 C15 -8 17 2 13 9" fill="none" stroke="#6e0f1a" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+    <g id="blossom">
+      <g fill="#fffaf5" stroke="#e6cf9e" stroke-width="1">
+        <ellipse cy="-11" rx="8" ry="11"/>
+        <ellipse cy="-11" rx="8" ry="11" transform="rotate(72)"/>
+        <ellipse cy="-11" rx="8" ry="11" transform="rotate(144)"/>
+        <ellipse cy="-11" rx="8" ry="11" transform="rotate(216)"/>
+        <ellipse cy="-11" rx="8" ry="11" transform="rotate(288)"/>
+      </g>
+      <circle r="4.5" fill="#f2d48f"/><circle r="2" fill="#dcb05a"/>
+    </g>
+    <g id="peach">
+      <g fill="#f7e2b5" stroke="#d9b56a" stroke-width="1">
+        <ellipse cy="-13" rx="10" ry="13"/>
+        <ellipse cy="-13" rx="10" ry="13" transform="rotate(60)"/>
+        <ellipse cy="-13" rx="10" ry="13" transform="rotate(120)"/>
+        <ellipse cy="-13" rx="10" ry="13" transform="rotate(180)"/>
+        <ellipse cy="-13" rx="10" ry="13" transform="rotate(240)"/>
+        <ellipse cy="-13" rx="10" ry="13" transform="rotate(300)"/>
+      </g>
+      <circle r="6" fill="#e8c36e"/><circle r="2.5" fill="#c9a24a"/>
+    </g>
+    <g id="bud">
+      <path d="M0 0 C-6 -6 -6 -16 0 -22 C6 -16 6 -6 0 0Z" fill="#c93542"/>
+      <path d="M0 0 C-5 -3 -7 -8 -6 -12 M0 0 C5 -3 7 -8 6 -12" fill="none" stroke="#7f9c7d" stroke-width="1.5"/>
+    </g>
+    <g id="dots" fill="#fff" stroke="#e6cf9e" stroke-width=".8">
+      <circle r="3"/><circle cx="8" cy="-6" r="2.4"/><circle cx="-7" cy="-7" r="2.2"/><circle cx="4" cy="8" r="2"/><circle cx="-9" cy="5" r="1.8"/>
+    </g>
+
+    <!-- Vòng hoa góc: khung 300x300, góc hoa nằm ở (0,0) -->
+    <g id="garland">
+      <g fill="none" stroke="#7f9c7d" stroke-width="2.2" stroke-linecap="round">
+        <path d="M-5 38 C60 52 140 26 250 -4"/>
+        <path d="M38 -5 C52 60 26 140 -4 250"/>
+        <path d="M150 34 C165 48 185 54 205 50"/>
+        <path d="M34 150 C48 165 54 185 50 205"/>
+      </g>
+      <use href="#leaf" transform="translate(72 46) rotate(-40)"/>
+      <use href="#leaf-dark" transform="translate(96 42) rotate(25) scale(.9)"/>
+      <use href="#leaf" transform="translate(140 34) rotate(-38)"/>
+      <use href="#leaf-dark" transform="translate(172 24) rotate(18) scale(.85)"/>
+      <use href="#leaf" transform="translate(205 13) rotate(-28) scale(.85)"/>
+      <use href="#leaf-dark" transform="translate(232 4) rotate(12) scale(.7)"/>
+      <use href="#leaf" transform="translate(190 52) rotate(8) scale(.7)"/>
+      <use href="#leaf" transform="translate(46 72) rotate(130)"/>
+      <use href="#leaf-dark" transform="translate(42 96) rotate(65) scale(.9)"/>
+      <use href="#leaf" transform="translate(34 140) rotate(128)"/>
+      <use href="#leaf-dark" transform="translate(24 172) rotate(72) scale(.85)"/>
+      <use href="#leaf" transform="translate(13 205) rotate(118) scale(.85)"/>
+      <use href="#leaf-dark" transform="translate(4 232) rotate(78) scale(.7)"/>
+      <use href="#leaf" transform="translate(52 190) rotate(82) scale(.7)"/>
+      <use href="#dots" transform="translate(120 60)"/>
+      <use href="#dots" transform="translate(60 120) rotate(90)"/>
+      <use href="#dots" transform="translate(190 30) scale(.8)"/>
+      <use href="#dots" transform="translate(30 190) rotate(90) scale(.8)"/>
+      <use href="#bud" transform="translate(222 22) rotate(70)"/>
+      <use href="#bud" transform="translate(22 222) rotate(200)"/>
+      <use href="#bud" transform="translate(205 50) rotate(110) scale(.8)"/>
+      <use href="#blossom" transform="translate(165 40) scale(.85)"/>
+      <use href="#blossom" transform="translate(40 165) scale(.85)"/>
+      <use href="#peach" transform="translate(88 88) scale(1.05)"/>
+      <use href="#rose" transform="translate(118 30) scale(.85)"/>
+      <use href="#rose" transform="translate(30 118) scale(.85)"/>
+      <use href="#rose" transform="translate(42 42) scale(1.45)"/>
+    </g>
+
+    <!-- Cành hoa nhỏ dưới tiêu đề: khung 200x40 -->
+    <g id="sprig">
+      <path d="M18 22 Q100 10 182 22" fill="none" stroke="#7f9c7d" stroke-width="1.6"/>
+      <use href="#leaf" transform="translate(70 17) rotate(195) scale(.55)"/>
+      <use href="#leaf-dark" transform="translate(55 20) rotate(160) scale(.5)"/>
+      <use href="#leaf" transform="translate(130 17) rotate(-15) scale(.55)"/>
+      <use href="#leaf-dark" transform="translate(145 20) rotate(20) scale(.5)"/>
+      <use href="#blossom" transform="translate(80 15) scale(.45)"/>
+      <use href="#blossom" transform="translate(120 15) scale(.45)"/>
+      <use href="#rose" transform="translate(100 15) scale(.42)"/>
+    </g>
+  </defs>
+</svg>
+
 <!-- Phong bì -->
-<div id="envelope" role="dialog" aria-label="Thiệp cưới">
+<div id="envelope" role="dialog" aria-label="Thiệp cưới" data-corners="tl tr bl br" data-corner-class="env-garland sway">
   <div class="env-card">
     <div class="env-box" aria-hidden="true">
       <div class="env-letter" data-bind="coupleNames"></div>
@@ -337,38 +485,111 @@
 
 <main>
   <!-- Hero -->
-  <header class="hero">
-    <svg class="floral tl" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-      <path pathLength="1" d="M10 190 C60 140 90 90 180 20"/>
-      <path pathLength="1" d="M50 150 c-20-5-35-20-38-40 c20 2 35 17 38 40z"/>
-      <path pathLength="1" d="M80 115 c-4-22 4-42 22-54 c5 20-4 40-22 54z"/>
-      <path pathLength="1" d="M110 85 c-22-3-38-17-44-37 c21 1 38 15 44 37z"/>
-      <path pathLength="1" d="M140 55 c-2-20 8-37 26-45 c3 20-8 36-26 45z"/>
-      <circle cx="180" cy="20" r="8" fill="#f4d6d9" stroke="#e3a9b1"/>
-      <circle cx="30" cy="170" r="5" fill="#f4d6d9" stroke="#e3a9b1"/>
-    </svg>
-    <svg class="floral br" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-      <path pathLength="1" d="M10 190 C60 140 90 90 180 20"/>
-      <path pathLength="1" d="M50 150 c-20-5-35-20-38-40 c20 2 35 17 38 40z"/>
-      <path pathLength="1" d="M80 115 c-4-22 4-42 22-54 c5 20-4 40-22 54z"/>
-      <path pathLength="1" d="M110 85 c-22-3-38-17-44-37 c21 1 38 15 44 37z"/>
-      <path pathLength="1" d="M140 55 c-2-20 8-37 26-45 c3 20-8 36-26 45z"/>
-      <circle cx="180" cy="20" r="8" fill="#f4d6d9" stroke="#e3a9b1"/>
-    </svg>
+  <header class="hero" data-corners="tl tr" data-corner-class="hero-corner bloom">
+    <div class="hero-bg" aria-hidden="true">
+      <!-- Tranh minh hoạ: hoàng hôn trên biển, cô dâu chú rể đứng trên mỏm đá -->
+      <svg class="scene" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e9a6a0"/>
+            <stop offset=".55" stop-color="#f7cdb4"/>
+            <stop offset="1" stop-color="#fde8cf"/>
+          </linearGradient>
+          <radialGradient id="g-sun">
+            <stop offset="0" stop-color="#fff7e4"/>
+            <stop offset=".3" stop-color="#ffe6c9" stop-opacity=".9"/>
+            <stop offset="1" stop-color="#ffe6c9" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="g-sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#c3d8d6"/>
+            <stop offset="1" stop-color="#7fa3a8"/>
+          </linearGradient>
+          <linearGradient id="g-rock" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#a8959b"/>
+            <stop offset="1" stop-color="#6e5f66"/>
+          </linearGradient>
+          <linearGradient id="g-rock2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8f7d84"/>
+            <stop offset="1" stop-color="#5a4d54"/>
+          </linearGradient>
+        </defs>
+
+        <rect width="1200" height="560" fill="url(#g-sky)"/>
+        <g class="clouds" fill="#fff" opacity=".6">
+          <ellipse cx="180" cy="150" rx="120" ry="20"/><ellipse cx="240" cy="136" rx="70" ry="18"/>
+          <ellipse cx="930" cy="110" rx="140" ry="20"/><ellipse cx="1010" cy="96" rx="70" ry="16"/>
+          <ellipse cx="560" cy="250" rx="90" ry="10"/><ellipse cx="760" cy="300" rx="70" ry="8"/>
+        </g>
+        <circle cx="600" cy="520" r="200" fill="url(#g-sun)"/>
+        <circle class="sun" cx="600" cy="520" r="50" fill="#fff3dc"/>
+        <g class="gulls" fill="none" stroke="#7a6870" stroke-width="2" stroke-linecap="round">
+          <path d="M430 300 q7 -7 14 0 q7 -7 14 0"/>
+          <path d="M470 272 q5 -5 10 0 q5 -5 10 0"/>
+          <path d="M760 250 q6 -6 12 0 q6 -6 12 0"/>
+        </g>
+        <path d="M860 540 C880 522 920 516 950 526 C975 514 1010 518 1030 540Z" fill="#d7aba4" opacity=".8"/>
+
+        <rect y="540" width="1200" height="260" fill="url(#g-sea)"/>
+        <g class="glints" fill="#fff6e6">
+          <rect x="560" y="550" width="80" height="3" rx="1.5"/>
+          <rect x="575" y="566" width="50" height="3" rx="1.5"/>
+          <rect x="550" y="584" width="100" height="3" rx="1.5"/>
+          <rect x="580" y="604" width="40" height="3" rx="1.5"/>
+        </g>
+        <path class="wave" data-wave="566,3,120" fill="#d2e2df" opacity=".45" style="--t:34s"/>
+        <path class="wave" data-wave="608,5,150" fill="#b3cecf" opacity=".5" style="--t:24s"/>
+        <path class="wave" data-wave="664,7,200" fill="#98bbbf" opacity=".55" style="--t:17s"/>
+        <path class="wave" data-wave="738,8,200" fill="#86adb2" opacity=".65" style="--t:12s"/>
+
+        <!-- Mỏm đá bên trái -->
+        <path d="M180 800 C200 740 240 720 290 726 C330 706 380 712 410 744 C425 760 432 780 434 800Z" fill="url(#g-rock2)"/>
+        <path class="foam" d="M170 792 C200 782 230 790 262 782 M380 786 C400 778 420 786 440 780" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+
+        <!-- Mỏm đá lớn bên phải -->
+        <path d="M470 800 C480 760 500 730 530 712 C570 694 640 690 720 686 C820 680 920 660 1010 640 C1080 626 1150 612 1200 606 L1200 800Z" fill="url(#g-rock)"/>
+        <path d="M780 800 C790 750 800 720 830 684 C920 666 1010 640 1080 626 C1150 612 1200 606 1200 606 L1200 800Z" fill="url(#g-rock2)" opacity=".55"/>
+        <path d="M560 740 L600 790 M660 720 L690 780 M760 712 L800 790 M900 690 L930 760 M1040 660 L1090 740" stroke="#5a4d54" stroke-width="3" opacity=".3"/>
+        <path d="M522 718 C570 694 640 690 720 686 C820 680 920 660 1010 640 C1080 626 1150 612 1200 606 L1200 622 C1150 628 1080 642 1010 656 C920 676 820 694 720 700 C640 704 575 708 522 718Z" fill="#a9c3a4"/>
+        <g>
+          <circle cx="560" cy="708" r="3.5" fill="#d8434f"/><circle cx="592" cy="702" r="3" fill="#fff"/>
+          <circle cx="682" cy="696" r="3.5" fill="#f6d58e"/><circle cx="706" cy="699" r="3" fill="#d8434f"/>
+          <circle cx="762" cy="691" r="3.5" fill="#fff"/><circle cx="842" cy="683" r="3" fill="#d8434f"/>
+          <circle cx="902" cy="672" r="3.5" fill="#f6d58e"/><circle cx="962" cy="656" r="3" fill="#fff"/>
+          <circle cx="1042" cy="640" r="3.5" fill="#d8434f"/><circle cx="1122" cy="626" r="3" fill="#fff"/>
+        </g>
+        <path class="foam" d="M440 786 C470 774 500 782 530 772" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+
+        <!-- Cô dâu & chú rể -->
+        <g transform="translate(625 692)" fill="#4d3d45">
+          <path class="veil" d="M-3 -62 C-18 -58 -34 -44 -50 -24 C-34 -32 -18 -38 -5 -44Z" fill="#fff" opacity=".7"/>
+          <circle cx="0" cy="-58" r="6.5"/>
+          <path d="M-5 -51 L5 -51 L7 -36 L20 0 L-22 0 L-7 -36Z" fill="#fffaf6"/>
+          <path d="M-5 -51 L5 -51 L7 -36 L20 0 L-22 0 L-7 -36Z" fill="none" stroke="#4d3d45" stroke-width="1.2" opacity=".5"/>
+          <circle cx="-1" cy="-38" r="4.5" fill="#c93542"/>
+          <path d="M5 -44 L13 -38" stroke="#4d3d45" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="20" cy="-63" r="7"/>
+          <path d="M12 -55 L28 -55 L30 -29 L27 -29 L26 0 L21 0 L20 -27 L19 0 L14 0 L13 -29 L10 -29Z"/>
+        </g>
+      </svg>
+      <div class="hero-photo" id="hero-photo"></div>
+    </div>
+
     <div class="container">
-      <div class="kicker enter" style="--d:.2s">Save the date</div>
-      <h1 class="names"><span class="write" style="--d:.5s" data-bind="groom"></span><span class="amp enter" style="--d:1.7s">&amp;</span><span class="write" style="--d:2s" data-bind="bride"></span></h1>
-      <div class="hero-date enter" style="--d:3.1s">
-        <span class="side" data-bind="heroWeekday"></span>
-        <span class="big" data-bind="heroDay"></span>
-        <span class="side" data-bind="heroMonthYear"></span>
+      <div class="hero-panel" data-corners="tl br" data-corner-class="panel-flower bloom" data-delay=".6">
+        <div class="kicker enter" style="--d:.2s">Save the date</div>
+        <h1 class="names"><span class="write" style="--d:.5s" data-bind="groom"></span><span class="amp enter" style="--d:1.7s">&amp;</span><span class="write" style="--d:2s" data-bind="bride"></span></h1>
+        <div class="hero-date enter" style="--d:3.1s">
+          <span class="side" data-bind="heroWeekday"></span>
+          <span class="big" data-bind="heroDay"></span>
+          <span class="side" data-bind="heroMonthYear"></span>
+        </div>
+        <div class="scroll-hint enter" style="--d:3.6s">Kéo xuống<span></span></div>
       </div>
-      <div class="scroll-hint enter" style="--d:3.6s">Kéo xuống<span></span></div>
     </div>
   </header>
 
   <!-- Lời mời -->
-  <section class="invite">
+  <section class="invite flowery" data-corners="tr bl">
     <div class="container">
       <div class="families">
         <div class="family reveal" data-anim="left">
@@ -394,7 +615,7 @@
   </section>
 
   <!-- Đếm ngược -->
-  <section class="countdown-wrap">
+  <section class="countdown-wrap flowery" data-corners="tl br">
     <div class="container">
       <div class="section-title reveal">
         <div class="script">Đếm ngược</div>
@@ -422,13 +643,13 @@
   </section>
 
   <!-- RSVP -->
-  <section id="rsvp" style="background: linear-gradient(180deg, var(--cream), #f3f6f1);">
+  <section id="rsvp" style="background: linear-gradient(180deg, var(--cream), #fbf1e8);">
     <div class="container" style="max-width: 560px;">
       <div class="section-title reveal">
         <div class="script">Xác nhận tham dự</div>
         <div class="sub" data-bind="rsvpDeadline"></div>
       </div>
-      <div class="card reveal">
+      <div class="card reveal" data-corners="tr" data-corner-class="card-flower bloom" data-delay=".3">
         <p class="demo-note" hidden>Chế độ xem thử: dữ liệu chỉ lưu trên máy này. Xem HUONG-DAN.md để kết nối Google Sheet.</p>
         <form class="form" id="rsvp-form">
           <label class="field">Họ và tên
@@ -463,13 +684,13 @@
   </section>
 
   <!-- Sổ lưu bút -->
-  <section id="wishes" style="background:#f3f6f1;">
+  <section id="wishes" style="background:#fbf1e8;">
     <div class="container" style="max-width: 560px;">
       <div class="section-title reveal">
         <div class="script">Sổ lưu bút</div>
         <div class="sub">Gửi lời chúc tới hai bạn</div>
       </div>
-      <div class="card reveal">
+      <div class="card reveal" data-corners="tl" data-corner-class="card-flower bloom" data-delay=".3">
         <p class="demo-note" hidden>Chế độ xem thử: lời chúc chỉ lưu trên máy này.</p>
         <form class="form" id="wish-form">
           <label class="field">Tên của bạn
@@ -486,7 +707,7 @@
     </div>
   </section>
 
-  <footer>
+  <footer class="flowery" data-corners="bl br">
     <div class="container">
       <div class="thanks">Thank you!</div>
       <p>Rất hân hạnh được đón tiếp bạn</p>
@@ -511,6 +732,11 @@ const CONFIG = {
   brideFather: "Trần Văn Cường",
   brideMother: "Phạm Thị Lan",
   brideAddress: "Đống Đa, Hà Nội",
+
+  // Ảnh cưới làm nền đầu thiệp. Đặt file ảnh cạnh index.html rồi ghi tên file, ví dụ "anh-cuoi.jpg".
+  // Để trống = dùng tranh minh hoạ biển và mỏm đá có sẵn.
+  heroPhoto: "",
+  heroPhotoPosition: "center 60%", // Chỉnh vùng ảnh được giữ lại khi cắt, ví dụ "center bottom"
 
   // Mốc đếm ngược (giờ Việt Nam, +07:00)
   weddingDate: "2026-12-20T18:00:00+07:00",
@@ -557,6 +783,7 @@ const CONFIG = {
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const DEMO = !CONFIG.SCRIPT_URL;
+const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -595,6 +822,29 @@ if (guest) {
   $$('input[name="name"]').forEach((i) => { i.value = guest; });
 }
 
+// ---------- Ảnh cưới nền (nếu có), lỗi tải ảnh thì giữ tranh minh hoạ ----------
+if (CONFIG.heroPhoto) {
+  const img = new Image();
+  img.onload = () => {
+    const el = $("#hero-photo");
+    el.style.backgroundImage = `url("${encodeURI(CONFIG.heroPhoto)}")`;
+    el.style.backgroundPosition = CONFIG.heroPhotoPosition || "center";
+    $(".hero").classList.add("has-photo");
+  };
+  img.src = CONFIG.heroPhoto;
+}
+
+// ---------- Sóng biển: đường sóng lặp lại, dài gấp đôi khung để trượt liền mạch ----------
+function wavePath(y, amp, period, width = 2400, bottom = 800) {
+  let d = `M0 ${y} q${period / 4} ${-amp} ${period / 2} 0`;
+  for (let x = period / 2; x < width; x += period / 2) d += ` t${period / 2} 0`;
+  return `${d} L${width} ${bottom} L0 ${bottom}Z`;
+}
+$$(".scene [data-wave]").forEach((p) => {
+  const [y, amp, period] = p.dataset.wave.split(",").map(Number);
+  p.setAttribute("d", wavePath(y, amp, period));
+});
+
 // ---------- Sự kiện + bản đồ ----------
 const mapsLink = (addr) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr)}`;
 const gcalStamp = (d) => new Date(d).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
@@ -612,7 +862,8 @@ const gcalLink = (ev) => {
 $("#events").innerHTML = CONFIG.events.map((ev, i) => {
   const start = new Date(ev.start);
   return `
-    <article class="event reveal" data-anim="${i % 2 ? "right" : "left"}" style="--d:${i * 0.12}s">
+    <article class="event reveal" data-anim="${i % 2 ? "right" : "left"}" style="--d:${i * 0.12}s"
+      data-corners="${i % 2 ? "tl" : "tr"}" data-corner-class="card-flower bloom" data-delay="${0.3 + i * 0.12}">
       <div class="host">${escapeHtml(ev.host)}</div>
       <h3>${escapeHtml(ev.title)}</h3>
       <div class="time">${vnFmt(start, { hour: "2-digit", minute: "2-digit", hour12: false })}</div>
@@ -629,6 +880,25 @@ $("#events").innerHTML = CONFIG.events.map((ev, i) => {
 
 const mapEvent = CONFIG.events.find((e) => e.showOnMap) || CONFIG.events[CONFIG.events.length - 1];
 $("#map").src = `https://maps.google.com/maps?q=${encodeURIComponent(mapEvent.address)}&z=15&output=embed`;
+
+// ---------- Hoa lá trang trí ----------
+// data-corners="tl tr bl br": gắn vòng hoa vào các góc; lật hình vẽ gốc (góc trên trái) cho từng góc
+const FLIP = {
+  tl: "",
+  tr: 'transform="matrix(-1 0 0 1 300 0)"',
+  bl: 'transform="matrix(1 0 0 -1 0 300)"',
+  br: 'transform="matrix(-1 0 0 -1 300 300)"',
+};
+$$("[data-corners]").forEach((el) => {
+  const cls = el.dataset.cornerClass || "sec-corner bloom";
+  const base = Number(el.dataset.delay || 0);
+  el.insertAdjacentHTML("afterbegin", el.dataset.corners.split(" ").map((c, i) => `
+    <svg class="garland g-${c} ${cls}" style="--d:${base + i * 0.25}s" viewBox="0 0 300 300" aria-hidden="true">
+      <use href="#garland" ${FLIP[c]}/>
+    </svg>`).join(""));
+});
+$$(".section-title").forEach((t) => t.insertAdjacentHTML("beforeend",
+  `<svg class="divider" viewBox="0 0 200 40" aria-hidden="true"><use href="#sprig"/></svg>`));
 
 // ---------- Đếm ngược ----------
 function tick() {
@@ -665,26 +935,34 @@ $("#open-btn").addEventListener("click", () => {
     env.classList.add("opened");
     document.body.classList.remove("locked");
     document.body.classList.add("is-open");
+    $$(".hero .bloom").forEach((el) => el.classList.add("in"));
     startPetals();
   }, REDUCED_MOTION ? 0 : 1500);
 });
 
-// ---------- Cánh hoa rơi ----------
-const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// ---------- Cánh hoa và lá rơi ----------
 function startPetals() {
   if (REDUCED_MOTION) return;
-  const count = innerWidth < 600 ? 12 : 22;
-  const colors = ["#f4d6d9", "#e3a9b1", "#f8e1e4", "#b7c9b5"];
+  const count = innerWidth < 600 ? 16 : 28;
+  const petalColors = ["#d8434f", "#b3202e", "#e8737c", "#f0a2a2"];
+  const leafColors = ["#b7c9b5", "#96b194"];
+  const goldColors = ["#d9b56a", "#c9a24a"];
   const rand = (a, b) => a + Math.random() * (b - a);
-  $("#petals").innerHTML = Array.from({ length: count }, () => `
-    <span class="petal" style="
-      --x:${rand(0, 100)}vw; --s:${rand(10, 20)}px;
-      --c:${colors[Math.floor(Math.random() * colors.length)]};
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  $("#petals").innerHTML = Array.from({ length: count }, () => {
+    // 60% cánh hoa đỏ, 25% lá xanh, 15% kim tuyến vàng
+    const r = Math.random();
+    const kind = r < 0.6 ? "" : r < 0.85 ? " leaf" : " gold";
+    const colors = kind === " leaf" ? leafColors : kind === " gold" ? goldColors : petalColors;
+    return `<span class="petal${kind}" style="
+      --x:${rand(0, 100)}vw; --s:${rand(10, 22)}px;
+      --c:${pick(colors)};
       --dur:${rand(9, 18)}s; --delay:${rand(0, 12)}s;
-      --drift:${rand(-120, 120)}px; --spin:${rand(-540, 540)}deg;"></span>`).join("");
+      --drift:${rand(-120, 120)}px; --spin:${rand(-540, 540)}deg;"></span>`;
+  }).join("");
 }
 
-// ---------- Hoa lá ở hero trôi chậm khi cuộn (parallax) ----------
+// ---------- Nền biển trôi chậm khi cuộn (parallax) ----------
 if (!REDUCED_MOTION) {
   const hero = $(".hero");
   let ticking = false;
@@ -703,6 +981,7 @@ const io = new IntersectionObserver((entries) => {
   entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
 }, { threshold: 0.15 });
 $$(".reveal").forEach((el) => io.observe(el));
+$$(".bloom").filter((el) => !el.closest(".hero")).forEach((el) => io.observe(el));
 
 // ---------- Lưu trữ: Google Apps Script hoặc chế độ xem thử ----------
 const demoStore = {
