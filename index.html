@@ -129,16 +129,25 @@
   .cal-grid .dow { font-size: .7rem; font-weight: 500; color: var(--muted); padding-bottom: 6px; text-transform: uppercase; }
   .cal-grid .dow.sun { color: var(--rose); }
   .cal-grid .d {
-    aspect-ratio: 1; display: grid; place-items: center; font-size: .92rem;
-    font-variant-numeric: tabular-nums; position: relative;
+    min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: .95rem; line-height: 1.15; font-variant-numeric: tabular-nums; position: relative;
   }
+  .cal-grid .d i { font-style: normal; font-size: .62rem; color: var(--muted); margin-top: 2px; }
+  .cal-grid .d i.m1 { color: var(--rose-deep); font-weight: 500; }
   .cal-grid .d.sun { color: var(--rose); }
   .cal-grid .d.wed { color: #fff; font-weight: 600; z-index: 0; }
+  .cal-grid .d.wed i { color: #fff; }
   .cal-grid .d.wed::before {
-    content: "♥"; position: absolute; inset: 0; display: grid; place-items: center; z-index: -1;
-    font-size: 2.6rem; line-height: 1; color: var(--rose); animation: beat 1.6s ease-in-out infinite;
+    /* Trái tim SVG, phần phình nằm đúng giữa cụm số dương + âm */
+    content: ""; position: absolute; z-index: -1; left: 50%; top: 50%;
+    width: min(56px, 120%); aspect-ratio: 1; translate: -50% -44%;
+    background: var(--rose);
+    -webkit-mask: var(--heart) center / contain no-repeat;
+            mask: var(--heart) center / contain no-repeat;
+    --heart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.35'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+    animation: beat 1.6s ease-in-out infinite;
   }
-  @keyframes beat { 0%,100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } }
+  @keyframes beat { 0%,100% { scale: 1; } 15% { scale: 1.1; } 30% { scale: 1; } 45% { scale: 1.06; } }
   .cal-note { margin-top: 10px; font-family: var(--serif); font-style: italic; font-size: .92rem; color: var(--muted); }
   .countdown div { background: var(--card); border-radius: 16px; padding: 16px 4px; box-shadow: var(--shadow); }
   .countdown b { display: block; font-family: var(--serif); font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 600; color: var(--rose-deep); line-height: 1.2; font-variant-numeric: tabular-nums; }
@@ -418,7 +427,7 @@ const CONFIG = {
   coupleShort: "Nam & Anh",
 
   // Giờ lễ chính, dùng cho đếm ngược (giờ Việt Nam, +07:00)
-  weddingDate: "2026-12-20T10:00:00+07:00",
+  weddingDate: "2026-11-17T10:00:00+07:00",
 
   inviteText: "Tình yêu đã đưa chúng mình đến với nhau. Trân trọng kính mời bạn đến dự buổi tiệc chung vui cùng gia đình chúng mình. Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
 
@@ -441,19 +450,19 @@ const CONFIG = {
   events: [
     {
       name: "Lễ Thành Hôn",
-      start: "2026-12-20T10:00:00+07:00", end: "2026-12-20T11:30:00+07:00",
-      lunar: "", // ví dụ: "Tức ngày ... tháng ... năm Bính Ngọ"
+      start: "2026-11-17T10:00:00+07:00", end: "2026-11-17T11:30:00+07:00",
+      lunar: "", // để trống = tự tính ngày âm lịch
       place: "Tư gia nhà trai",
       address: "Số 12, Đường Láng, Đống Đa, Hà Nội",
       map: "https://maps.google.com/?q=12+Đường+Láng+Đống+Đa+Hà+Nội"
     },
     {
       name: "Tiệc Cưới",
-      start: "2026-12-20T17:30:00+07:00", end: "2026-12-20T21:00:00+07:00",
-      lunar: "", // ví dụ: "Tức ngày ... tháng ... năm Bính Ngọ"
-      place: "Trung tâm tiệc cưới Hoa Hồng — Sảnh Rose",
-      address: "Số 88, Trần Duy Hưng, Cầu Giấy, Hà Nội",
-      map: "https://maps.google.com/?q=88+Trần+Duy+Hưng+Cầu+Giấy+Hà+Nội"
+      start: "2026-11-17T17:30:00+07:00", end: "2026-11-17T21:00:00+07:00",
+      lunar: "", // để trống = tự tính ngày âm lịch
+      place: "Trung tâm Tổ chức Sự kiện & Nhà hàng Minh Hồng",
+      address: "TP. Vinh, Nghệ An",
+      map: "https://www.google.com/maps/place/Trung+T%C3%A2m+T%E1%BB%95+Ch%E1%BB%A9c+S%E1%BB%B1+Ki%E1%BB%87n+V%C3%A0+Nh%C3%A0+H%C3%A0ng+Minh+H%E1%BB%93ng/@18.6925926,105.6718338,17z/data=!3m1!4b1!4m6!3m5!1s0x3139cf147b6fb775:0xd3a5ca258679eef2!8m2!3d18.6925926!4d105.6744087!16s%2Fg%2F11v0yzll1z"
     }
   ],
 
@@ -462,7 +471,7 @@ const CONFIG = {
 
   // Google Apps Script nhận RSVP
   rsvpUrl: "https://script.google.com/macros/s/AKfycbwBJ8z9VsB1jDJr260QuUCCn5QITOeANqLdQmbT4FyTTDIcnp7fl0QfzZVl7ViQQg/exec",
-  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/12/2026 để chúng mình chuẩn bị chu đáo nhất."
+  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/11/2026 để chúng mình chuẩn bị chu đáo nhất."
 };
 /* ===================================================================== */
 
@@ -486,6 +495,87 @@ const fmtDay = d => d.toLocaleDateString("vi-VN", { weekday: "long", day: "2-dig
 const fmtTime = d => d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Ho_Chi_Minh" });
 $("#heroDate").textContent = wDate.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Asia/Ho_Chi_Minh" }).replace(/\//g, " . ");
 
+// ---- Âm lịch Việt Nam (thuật toán Hồ Ngọc Đức, múi giờ +7) ----
+var Lunar = (function () {
+  var INT = Math.floor, PI = Math.PI, dr = PI / 180, TZ = 7;
+  function jdFromDate(dd, mm, yy) {
+    var a = INT((14 - mm) / 12), y = yy + 4800 - a, m = mm + 12 * a - 3;
+    var jd = dd + INT((153 * m + 2) / 5) + 365 * y + INT(y / 4) - INT(y / 100) + INT(y / 400) - 32045;
+    if (jd < 2299161) jd = dd + INT((153 * m + 2) / 5) + 365 * y + INT(y / 4) - 32083;
+    return jd;
+  }
+  function newMoon(k) {
+    var T = k / 1236.85, T2 = T * T, T3 = T2 * T;
+    var Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
+    Jd1 += 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    var M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+    var Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+    var F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    var C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+    C1 -= 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
+    C1 -= 0.0004 * Math.sin(dr * 3 * Mpr);
+    C1 += 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
+    C1 -= 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+    C1 -= 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+    C1 += 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    var deltat = T < -11
+      ? 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3
+      : -0.000278 + 0.000265 * T + 0.000262 * T2;
+    return Jd1 + C1 - deltat;
+  }
+  function newMoonDay(k) { return INT(newMoon(k) + 0.5 + TZ / 24); }
+  function sunLongitude(jdn) {
+    var T = (jdn - 2451545.0) / 36525, T2 = T * T;
+    var M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+    var L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+    var DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
+    DL += (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.000290 * Math.sin(dr * 3 * M);
+    var L = (L0 + DL) * dr;
+    return L - PI * 2 * INT(L / (PI * 2));
+  }
+  function sunSector(day) { return INT(sunLongitude(day - 0.5 - TZ / 24) / PI * 6); }
+  function lunarMonth11(yy) {
+    var k = INT((jdFromDate(31, 12, yy) - 2415021) / 29.530588853);
+    var nm = newMoonDay(k);
+    return sunSector(nm) >= 9 ? newMoonDay(k - 1) : nm;
+  }
+  function leapMonthOffset(a11) {
+    var k = INT((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+    var last, i = 1, arc = sunSector(newMoonDay(k + i));
+    do { last = arc; i++; arc = sunSector(newMoonDay(k + i)); } while (arc != last && i < 14);
+    return i - 1;
+  }
+  // Trả về { day, month, year, leap }
+  function fromSolar(dd, mm, yy) {
+    var dayNumber = jdFromDate(dd, mm, yy);
+    var k = INT((dayNumber - 2415021.076998695) / 29.530588853);
+    var monthStart = newMoonDay(k + 1);
+    if (monthStart > dayNumber) monthStart = newMoonDay(k);
+    var a11 = lunarMonth11(yy), b11 = a11, year;
+    if (a11 >= monthStart) { year = yy; a11 = lunarMonth11(yy - 1); }
+    else { year = yy + 1; b11 = lunarMonth11(yy + 1); }
+    var day = dayNumber - monthStart + 1, diff = INT((monthStart - a11) / 29);
+    var leap = false, month = diff + 11;
+    if (b11 - a11 > 365) {
+      var lm = leapMonthOffset(a11);
+      if (diff >= lm) { month = diff + 10; if (diff == lm) leap = true; }
+    }
+    if (month > 12) month -= 12;
+    if (month >= 11 && diff < 4) year -= 1;
+    return { day: day, month: month, year: year, leap: leap };
+  }
+  var CAN = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
+  var CHI = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+  function yearName(y) { return CAN[(y + 6) % 10] + " " + CHI[(y + 8) % 12]; }
+  return { fromSolar: fromSolar, yearName: yearName };
+})();
+// "Tức ngày 12 tháng 11 năm Bính Ngọ" — tính theo ngày ở giờ Việt Nam
+function lunarText(date) {
+  const [y, m, d] = date.toLocaleDateString("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).split("-").map(Number);
+  const l = Lunar.fromSolar(d, m, y);
+  return `Tức ngày ${l.day} tháng ${l.leap ? "nhuận " : ""}${l.month} năm ${Lunar.yearName(l.year)}`;
+}
+
 // ---- Events ----
 const gcalDate = d => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 $("#events").innerHTML = CONFIG.events.map(ev => {
@@ -499,7 +589,7 @@ $("#events").innerHTML = CONFIG.events.map(ev => {
     <h3>${esc(ev.name)}</h3>
     <p class="time">${fmtTime(s)}</p>
     <p class="day">${esc(fmtDay(s))}</p>
-    ${ev.lunar ? `<p class="lunar">(${esc(ev.lunar)})</p>` : ""}
+    <p class="lunar">(${esc(ev.lunar || lunarText(s))})</p>
     <p class="place">${esc(ev.place)}</p>
     <p class="addr">${esc(ev.address)}</p>
     <div class="actions">
@@ -558,11 +648,14 @@ lb.addEventListener("touchend", e => {
     const cls = ["d"];
     if ((offset + i - 1) % 7 === 6) cls.push("sun");
     if (i === d) cls.push("wed");
-    html += `<span class="${cls.join(" ")}"${i === d ? ' aria-label="Ngày cưới"' : ""}>${i}</span>`;
+    // Ngày âm: hiện "d/m" ở mùng 1 (hoặc ngày đầu tháng dương) để biết đang ở tháng âm nào
+    const l = Lunar.fromSolar(i, m, y);
+    const ld = (l.day === 1 || i === 1) ? `${l.day}/${l.month}${l.leap ? "N" : ""}` : l.day;
+    html += `<span class="${cls.join(" ")}"${i === d ? ' aria-label="Ngày cưới"' : ""}>${i}<i${l.day === 1 ? ' class="m1"' : ""}>${ld}</i></span>`;
   }
   $("#calendar").innerHTML =
     `<p class="cal-head">Tháng ${m} · ${y}</p><div class="cal-grid">${html}</div>` +
-    `<p class="cal-note">${esc(fmtDay(wDate))}</p>`;
+    `<p class="cal-note">${esc(fmtDay(wDate))}<br>(${esc(lunarText(wDate))})</p>`;
 })();
 
 // ---- Countdown ----
