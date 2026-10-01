@@ -120,6 +120,26 @@
   /* ---------- Countdown ---------- */
   .countdown-sec { background: var(--bg-soft); }
   .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 480px; margin: 0 auto; }
+  .calendar {
+    max-width: 400px; margin: 4px auto 28px; background: var(--card); border-radius: 22px;
+    padding: 22px 16px 18px; box-shadow: var(--shadow);
+  }
+  .cal-head { font-family: var(--serif); font-size: 1.15rem; color: var(--rose-deep); margin-bottom: 12px; letter-spacing: .05em; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-grid .dow { font-size: .7rem; font-weight: 500; color: var(--muted); padding-bottom: 6px; text-transform: uppercase; }
+  .cal-grid .dow.sun { color: var(--rose); }
+  .cal-grid .d {
+    aspect-ratio: 1; display: grid; place-items: center; font-size: .92rem;
+    font-variant-numeric: tabular-nums; position: relative;
+  }
+  .cal-grid .d.sun { color: var(--rose); }
+  .cal-grid .d.wed { color: #fff; font-weight: 600; z-index: 0; }
+  .cal-grid .d.wed::before {
+    content: "♥"; position: absolute; inset: 0; display: grid; place-items: center; z-index: -1;
+    font-size: 2.6rem; line-height: 1; color: var(--rose); animation: beat 1.6s ease-in-out infinite;
+  }
+  @keyframes beat { 0%,100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } }
+  .cal-note { margin-top: 10px; font-family: var(--serif); font-style: italic; font-size: .92rem; color: var(--muted); }
   .countdown div { background: var(--card); border-radius: 16px; padding: 16px 4px; box-shadow: var(--shadow); }
   .countdown b { display: block; font-family: var(--serif); font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 600; color: var(--rose-deep); line-height: 1.2; font-variant-numeric: tabular-nums; }
   .countdown small { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
@@ -202,25 +222,9 @@
   .form-msg.ok { color: #4f8a5b; }
   .form-msg.err { color: #c0392b; }
 
-  /* ---------- Gift ---------- */
-  .gifts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-  .gift { background: var(--card); border-radius: 22px; padding: 24px; text-align: center; border: 1px solid var(--line); }
-  .gift h4 { font-size: .72rem; letter-spacing: .25em; text-transform: uppercase; color: var(--rose); font-weight: 500; }
-  .gift .qr { width: 160px; height: 160px; margin: 14px auto; border-radius: 12px; background: var(--bg-soft); display: grid; place-items: center; color: var(--muted); font-size: .8rem; overflow: hidden; }
-  .gift .qr img { width: 100%; height: 100%; object-fit: contain; }
-  .gift .bank { font-weight: 500; }
-  .gift .acc { font-family: var(--serif); font-size: 1.3rem; letter-spacing: .05em; margin: 2px 0; }
-  .gift .holder { color: var(--muted); font-size: .85rem; margin-bottom: 12px; }
-
   footer { padding: 60px 16px 90px; text-align: center; background: var(--bg-soft); }
   footer .title { font-size: 2.6rem; }
 
-  .toast {
-    position: fixed; left: 50%; bottom: 80px; transform: translate(-50%, 20px); opacity: 0;
-    background: var(--text); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: .85rem;
-    transition: .3s; z-index: 60; pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
   @media (max-width: 560px) {
     section { padding: 64px 16px; }
@@ -269,6 +273,7 @@
     <div class="reveal">
       <p class="eyebrow">Cùng đếm ngược</p>
       <h3 class="title">Ngày chung đôi</h3>
+      <div class="calendar" id="calendar" aria-label="Lịch tháng cưới"></div>
       <div class="countdown" id="countdown">
         <div><b id="cdD">00</b><small>Ngày</small></div>
         <div><b id="cdH">00</b><small>Giờ</small></div>
@@ -385,16 +390,6 @@
     </div>
   </section>
 
-  <!-- Gift -->
-  <section class="center" style="padding-top:0">
-    <div class="wrap reveal">
-      <p class="eyebrow">Mừng cưới</p>
-      <h3 class="title">Hộp mừng cưới</h3>
-      <p style="color:var(--muted);font-size:.9rem;max-width:480px;margin:0 auto 24px">Sự hiện diện của bạn là món quà ý nghĩa nhất. Nếu không thể đến chung vui, bạn có thể gửi lời chúc qua đây.</p>
-      <div class="gifts" id="gifts"></div>
-    </div>
-  </section>
-
   <footer>
     <p class="eyebrow">Thank you</p>
     <h3 class="title" data-text="coupleShort"></h3>
@@ -412,7 +407,6 @@
   </div>
 </dialog>
 
-<div class="toast" id="toast"></div>
 
 <script>
 /* =====================================================================
@@ -446,14 +440,6 @@ const CONFIG = {
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
     {
-      name: "Lễ Vu Quy",
-      start: "2026-12-20T08:00:00+07:00", end: "2026-12-20T09:30:00+07:00",
-      lunar: "", // ví dụ: "Tức ngày ... tháng ... năm Bính Ngọ"
-      place: "Tư gia nhà gái",
-      address: "Số 45, Nguyễn Trãi, Thanh Xuân, Hà Nội",
-      map: "https://maps.google.com/?q=45+Nguyễn+Trãi+Thanh+Xuân+Hà+Nội"
-    },
-    {
       name: "Lễ Thành Hôn",
       start: "2026-12-20T10:00:00+07:00", end: "2026-12-20T11:30:00+07:00",
       lunar: "", // ví dụ: "Tức ngày ... tháng ... năm Bính Ngọ"
@@ -476,13 +462,7 @@ const CONFIG = {
 
   // Google Apps Script nhận RSVP
   rsvpUrl: "https://script.google.com/macros/s/AKfycbwBJ8z9VsB1jDJr260QuUCCn5QITOeANqLdQmbT4FyTTDIcnp7fl0QfzZVl7ViQQg/exec",
-  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/12/2026 để chúng mình chuẩn bị chu đáo nhất.",
-
-  // Mừng cưới — qr: đường dẫn ảnh QR (để "" nếu chưa có)
-  gifts: [
-    { side: "Chú rể", bank: "Vietcombank", account: "0123456789", holder: "NGUYEN HOANG NAM", qr: "" },
-    { side: "Cô dâu", bank: "Techcombank", account: "9876543210", holder: "LE MINH ANH", qr: "" }
-  ]
+  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/12/2026 để chúng mình chuẩn bị chu đáo nhất."
 };
 /* ===================================================================== */
 
@@ -564,27 +544,26 @@ lb.addEventListener("touchend", e => {
   tx = null;
 });
 
-// ---- Gifts ----
-$("#gifts").innerHTML = CONFIG.gifts.map(g => `
-  <div class="gift">
-    <h4>Mừng cưới ${esc(g.side)}</h4>
-    <div class="qr">${g.qr ? `<img src="${esc(g.qr)}" alt="QR ${esc(g.bank)}">` : "Mã QR"}</div>
-    <p class="bank">${esc(g.bank)}</p>
-    <p class="acc">${esc(g.account)}</p>
-    <p class="holder">${esc(g.holder)}</p>
-    <button class="btn ghost" type="button" data-copy="${esc(g.account)}">Sao chép số tài khoản</button>
-  </div>`).join("");
-const toast = msg => {
-  const t = $("#toast");
-  t.textContent = msg; t.classList.add("show");
-  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2000);
-};
-$("#gifts").addEventListener("click", async e => {
-  const b = e.target.closest("[data-copy]");
-  if (!b) return;
-  try { await navigator.clipboard.writeText(b.dataset.copy); toast("Đã sao chép số tài khoản"); }
-  catch { toast(b.dataset.copy); }
-});
+// ---- Month calendar (tuần bắt đầu từ Thứ Hai) ----
+(function renderCalendar() {
+  // Lấy ngày/tháng/năm theo giờ Việt Nam để không lệch ngày khi khách ở múi giờ khác
+  const [y, m, d] = wDate.toLocaleDateString("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).split("-").map(Number);
+  const first = new Date(y, m - 1, 1).getDay();       // 0 = CN
+  const offset = (first + 6) % 7;                      // số ô trống trước ngày 1
+  const days = new Date(y, m, 0).getDate();
+  const dows = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+  let html = dows.map((t, i) => `<span class="dow${i === 6 ? " sun" : ""}">${t}</span>`).join("");
+  html += "<span></span>".repeat(offset);
+  for (let i = 1; i <= days; i++) {
+    const cls = ["d"];
+    if ((offset + i - 1) % 7 === 6) cls.push("sun");
+    if (i === d) cls.push("wed");
+    html += `<span class="${cls.join(" ")}"${i === d ? ' aria-label="Ngày cưới"' : ""}>${i}</span>`;
+  }
+  $("#calendar").innerHTML =
+    `<p class="cal-head">Tháng ${m} · ${y}</p><div class="cal-grid">${html}</div>` +
+    `<p class="cal-note">${esc(fmtDay(wDate))}</p>`;
+})();
 
 // ---- Countdown ----
 const pad = n => String(n).padStart(2, "0");
