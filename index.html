@@ -184,13 +184,12 @@
 
   /* ---------- Gallery ---------- */
   .gallery-sec { background: var(--bg-soft); }
-  /* Lưới 2 cột, ô cùng tỉ lệ để ảnh luôn xếp thành hàng đều nhau */
-  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .gallery { columns: 2 160px; column-gap: 12px; }
   .gallery button {
-    width: 100%; aspect-ratio: 3 / 4; border: 0; padding: 0; cursor: zoom-in; display: block;
-    border-radius: 14px; overflow: hidden; background: var(--blush);
+    width: 100%; margin-bottom: 12px; border: 0; padding: 0; cursor: zoom-in; display: block;
+    border-radius: 14px; overflow: hidden; break-inside: avoid; background: var(--blush);
   }
-  .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  .gallery img { width: 100%; transition: transform .6s ease; }
   .gallery button:hover img { transform: scale(1.05); }
   dialog.lightbox {
     border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh;
@@ -235,19 +234,6 @@
   footer { padding: 60px 16px 90px; text-align: center; background: var(--bg-soft); }
   footer .title { font-size: 2.6rem; }
 
-  /* ---------- Ảnh nền giấy (bản test) ---------- */
-  /* Ảnh dọc dài: kéo phủ toàn bộ phần dưới hero, cành mai ở 4 góc khớp đầu/cuối trang */
-  .paper { background: var(--bg) url("images/bg.png") center top / 100% 100% no-repeat; }
-  .paper .countdown-sec, .paper .gallery-sec, .paper footer { background: transparent; }
-  .paper .family, .paper .calendar, .paper .countdown div, .paper .event, .paper .rsvp-card {
-    background: rgba(255, 255, 255, .82);
-    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
-  }
-  /* Màn hình rộng: giữ tỉ lệ ảnh để cành hoa không bị kéo méo */
-  @media (min-width: 700px) {
-    .paper { background-size: 100% auto; background-repeat: repeat-y; }
-  }
-
 
   @media (max-width: 560px) {
     section { padding: 64px 16px; }
@@ -291,7 +277,6 @@
     </div>
   </header>
 
-  <div class="paper">
   <!-- Countdown -->
   <section class="countdown-sec center">
     <div class="reveal">
@@ -419,7 +404,6 @@
     <h3 class="title" data-text="coupleShort"></h3>
     <p style="color:var(--muted);font-size:.9rem">Rất hân hạnh được đón tiếp!</p>
   </footer>
-  </div>
 </main>
 
 <dialog class="lightbox" id="lightbox" aria-label="Xem ảnh">
