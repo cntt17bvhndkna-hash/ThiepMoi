@@ -234,6 +234,19 @@
   footer { padding: 60px 16px 90px; text-align: center; background: var(--bg-soft); }
   footer .title { font-size: 2.6rem; }
 
+  /* ---------- Ảnh nền giấy (bản test) ---------- */
+  /* Ảnh dọc dài: kéo phủ toàn bộ phần dưới hero, cành mai ở 4 góc khớp đầu/cuối trang */
+  .paper { background: var(--bg) url("images/bg.png") center top / 100% 100% no-repeat; }
+  .paper .countdown-sec, .paper .gallery-sec, .paper footer { background: transparent; }
+  .paper .family, .paper .calendar, .paper .countdown div, .paper .event, .paper .rsvp-card {
+    background: rgba(255, 255, 255, .82);
+    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  }
+  /* Màn hình rộng: giữ tỉ lệ ảnh để cành hoa không bị kéo méo */
+  @media (min-width: 700px) {
+    .paper { background-size: 100% auto; background-repeat: repeat-y; }
+  }
+
 
   @media (max-width: 560px) {
     section { padding: 64px 16px; }
@@ -277,6 +290,7 @@
     </div>
   </header>
 
+  <div class="paper">
   <!-- Countdown -->
   <section class="countdown-sec center">
     <div class="reveal">
@@ -404,6 +418,7 @@
     <h3 class="title" data-text="coupleShort"></h3>
     <p style="color:var(--muted);font-size:.9rem">Rất hân hạnh được đón tiếp!</p>
   </footer>
+  </div>
 </main>
 
 <dialog class="lightbox" id="lightbox" aria-label="Xem ảnh">
