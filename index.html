@@ -192,13 +192,27 @@
 
   /* ---------- Gallery ---------- */
   .gallery-sec { background: var(--bg-soft); }
-  .gallery { columns: 2 160px; column-gap: 12px; }
-  .gallery button {
-    width: 100%; margin-bottom: 12px; border: 0; padding: 0; cursor: zoom-in; display: block;
-    border-radius: 14px; overflow: hidden; break-inside: avoid; background: var(--blush);
+  /* Lưới gọn: ảnh đầu to (2x2), các ảnh còn lại ô nhỏ 3:4; ô cuối hiện "+N" nếu còn ảnh */
+  .gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    max-width: 720px; margin: 0 auto;
   }
-  .gallery img { width: 100%; transition: transform .6s ease; }
-  .gallery button:hover img { transform: scale(1.05); }
+  .gallery button {
+    position: relative; border: 0; padding: 0; cursor: zoom-in; display: block;
+    border-radius: 12px; overflow: hidden; background: var(--blush); aspect-ratio: 3 / 4;
+  }
+  .gallery button.big { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+  .gallery img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
+    transition: transform .6s ease;
+  }
+  .gallery button:hover img { transform: scale(1.06); }
+  .gallery .more {
+    position: absolute; inset: 0; display: grid; place-items: center; align-content: center;
+    background: rgba(74, 58, 60, .55); color: #fff; font-family: var(--serif); font-size: 1.8rem; line-height: 1.1;
+  }
+  .gallery .more small { font-family: var(--sans); font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; margin-top: 4px; }
+  @media (min-width: 640px) { .gallery { gap: 12px; } .gallery button { border-radius: 16px; } }
   dialog.lightbox {
     border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh;
     width: 100vw; height: 100vh; margin: 0;
@@ -453,7 +467,8 @@ const CONFIG = {
   bridePhoto: "images/bride.jpg",
 
   // Album: thêm/bớt ảnh tùy ý (nên dùng ảnh gốc độ phân giải cao)
-  gallery: ["images/07.jpg", "images/01.jpg", "images/02.jpg", "images/03.jpg", "images/04.jpg", "images/05.jpg", "images/06.jpg"],
+  // Ảnh đầu tiên hiện ô to; hiện 6 ô, ảnh thứ 7 trở đi xem trong lightbox (ô cuối hiện "+N")
+  gallery: ["images/01.jpg", "images/04.jpg", "images/02.jpg", "images/06.jpg", "images/05.jpg", "images/03.jpg", "images/07.jpg"],
 
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
@@ -611,9 +626,16 @@ $("#events").innerHTML = CONFIG.events.map(ev => {
 
 // ---- Gallery + lightbox ----
 const gal = CONFIG.gallery;
-$("#gallery").innerHTML = gal.map((src, i) =>
-  `<button type="button" data-i="${i}" aria-label="Xem ảnh ${i + 1}"><img src="${esc(src)}" alt="Ảnh cưới ${i + 1}" loading="lazy"></button>`
-).join("");
+// Hiện tối đa 6 ô (1 to + 5 nhỏ); ảnh thumbnail lấy từ thư mục thumbs/, lỗi thì dùng ảnh gốc
+const SHOW = 6;
+const thumb = src => src.replace(/([^/]+)$/, "thumbs/$1");
+$("#gallery").innerHTML = gal.slice(0, SHOW).map((src, i) => {
+  const rest = gal.length - SHOW;
+  const more = i === SHOW - 1 && rest > 0 ? `<span class="more">+${rest}<small>Xem thêm</small></span>` : "";
+  // Bấm ô "+N" thì mở thẳng ảnh ẩn đầu tiên
+  return `<button type="button" data-i="${more ? SHOW : i}"${i === 0 ? ' class="big"' : ""} aria-label="Xem ảnh ${i + 1}">`
+    + `<img src="${esc(thumb(src))}" onerror="this.onerror=null;this.src='${esc(src)}'" alt="Ảnh cưới ${i + 1}" loading="lazy">${more}</button>`;
+}).join("");
 const lb = $("#lightbox");
 let cur = 0;
 const show = i => {
