@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Thiệp cưới Hoàng Nam & Minh Anh</title>
+<title>Thiệp cưới Tuấn Sang & Hoàng An</title>
 <meta name="description" content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Thiệp cưới Hoàng Nam & Minh Anh">
+<meta property="og:title" content="Thiệp cưới Tuấn Sang & Hoàng An">
 <meta property="og:description" content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình.">
 <meta property="og:image" content="images/og.jpg">
 <meta property="og:image:width" content="1200">
@@ -386,14 +386,14 @@
       <div class="couple stagger">
         <div class="person">
           <img data-src="groomPhoto" alt="Chú rể" loading="lazy">
-          <p class="role">Chú rể</p>
-          <p class="name" data-text="groom"></p>
+          <p class="role" data-text="groomRole"></p>
+          <p class="name" data-text="groomFull"></p>
         </div>
         <div class="amp">&amp;</div>
         <div class="person">
           <img data-src="bridePhoto" alt="Cô dâu" loading="lazy">
-          <p class="role">Cô dâu</p>
-          <p class="name" data-text="bride"></p>
+          <p class="role" data-text="brideRole"></p>
+          <p class="name" data-text="brideFull"></p>
         </div>
       </div>
     </div>
@@ -488,7 +488,7 @@
     </div>
     <div class="thanks-photo" role="img" aria-label="Ảnh cưới"></div>
     <div class="thanks-foot reveal">
-      <p class="thanks-text">Sự hiện diện của bạn là niềm hạnh phúc của gia đình chúng mình.<br>Rất hân hạnh được đón tiếp!</p>
+      <p class="thanks-text">Cảm ơn mọi người vì đã trở thành một phần quan trọng trong ngày đặc biệt này.<br>Rất hân hạnh được đón tiếp!</p>
       <p class="thanks-sign" data-text="coupleShort"></p>
     </div>
    </div>
@@ -511,21 +511,25 @@
    CONFIG — CHỈ CẦN SỬA KHỐI NÀY
    ===================================================================== */
 const CONFIG = {
-  groom: "Hoàng Nam",
-  bride: "Minh Anh",
-  coupleShort: "Nam & Anh",
+  groom: "Tuấn Sang",
+  bride: "Hoàng An",
+  groomFull: "Ngô Tuấn Sang",
+  brideFull: "Nguyễn Hoàng An",
+  groomRole: "Chú rể · Trưởng nam",
+  brideRole: "Cô dâu · Trưởng nữ",
+  coupleShort: "Sang & An",
 
   // Giờ lễ chính, dùng cho đếm ngược (giờ Việt Nam, +07:00)
-  weddingDate: "2026-11-17T10:00:00+07:00",
+  weddingDate: "2026-11-17T15:00:00+07:00",
 
-  inviteText: "Tình yêu đã đưa chúng mình đến với nhau. Trân trọng kính mời bạn đến dự buổi tiệc chung vui cùng gia đình chúng mình. Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+  inviteText: "Trân trọng kính mời bạn tới dự bữa tiệc thân mật mừng lễ thành hôn cùng gia đình chúng tôi. Sự hiện diện của bạn là niềm vinh hạnh của gia đình chúng tôi!",
 
-  groomFather: "Ông Nguyễn Văn Bình",
-  groomMother: "Bà Trần Thị Hoa",
-  groomHome: "Số 12, Đường Láng, Đống Đa, Hà Nội",
-  brideFather: "Ông Lê Văn Cường",
-  brideMother: "Bà Phạm Thị Lan",
-  brideHome: "Số 45, Nguyễn Trãi, Thanh Xuân, Hà Nội",
+  groomFather: "Ông Ngô Tuấn Anh",
+  groomMother: "Bà Nguyễn Thị Bình",
+  groomHome: "Khối Tân Phú 2, Phường Vinh Phú, Tỉnh Nghệ An",
+  brideFather: "Ông Nguyễn Xuân Long",
+  brideMother: "Bà Hoàng Thị Lộc",
+  brideHome: "Khối Tân Tiến, Phường Vinh Phú, Tỉnh Nghệ An",
 
   coverPhoto: "images/cover.jpg",      // vuông 400x400
   heroPhoto: "images/hero.jpg",        // dọc, cho điện thoại
@@ -544,18 +548,18 @@ const CONFIG = {
   events: [
     {
       name: "Lễ Thành Hôn",
-      start: "2026-11-17T10:00:00+07:00", end: "2026-11-17T11:30:00+07:00",
+      start: "2026-11-17T15:00:00+07:00", end: "2026-11-17T16:30:00+07:00",
       lunar: "", // để trống = tự tính ngày âm lịch
       place: "Tư gia nhà trai",
-      address: "Số 12, Đường Láng, Đống Đa, Hà Nội",
-      map: "https://maps.google.com/?q=12+Đường+Láng+Đống+Đa+Hà+Nội"
+      address: "Khối Tân Phú 2, Phường Vinh Phú, Tỉnh Nghệ An",
+      map: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Khối Tân Phú 2, Vinh Phú, Nghệ An")
     },
     {
       name: "Tiệc Cưới",
-      start: "2026-11-17T17:30:00+07:00", end: "2026-11-17T21:00:00+07:00",
+      start: "2026-11-17T17:00:00+07:00", end: "2026-11-17T20:30:00+07:00",
       lunar: "", // để trống = tự tính ngày âm lịch
-      place: "Trung tâm Tổ chức Sự kiện & Nhà hàng Minh Hồng",
-      address: "TP. Vinh, Nghệ An",
+      place: "Trung tâm Tổ chức Sự kiện Minh Hồng",
+      address: "Số 9B, Đường Mai Hắc Đế, Phường Vinh Hưng, Tỉnh Nghệ An",
       map: "https://www.google.com/maps/place/Trung+T%C3%A2m+T%E1%BB%95+Ch%E1%BB%A9c+S%E1%BB%B1+Ki%E1%BB%87n+V%C3%A0+Nh%C3%A0+H%C3%A0ng+Minh+H%E1%BB%93ng/@18.6925926,105.6718338,17z/data=!3m1!4b1!4m6!3m5!1s0x3139cf147b6fb775:0xd3a5ca258679eef2!8m2!3d18.6925926!4d105.6744087!16s%2Fg%2F11v0yzll1z"
     }
   ],
@@ -821,6 +825,16 @@ if (CONFIG.music) {
   }
   GESTURES.forEach(ev => addEventListener(ev, onGesture, { capture: true, passive: true }));
   tryPlay();
+
+  // Rời thiệp (chuyển tab, ra màn hình chính, khóa máy, đóng Zalo...) thì tắt nhạc;
+  // quay lại thì phát tiếp nếu trước đó đang phát và khách không tự tắt
+  let pausedByHide = false;
+  const onHide = () => { if (!bgm.paused) { pausedByHide = true; bgm.pause(); } };
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) onHide();
+    else if (pausedByHide && !userPaused) { pausedByHide = false; bgm.play().catch(() => {}); }
+  });
+  addEventListener("pagehide", onHide);
 }
 
 // ---- Open invitation ----
