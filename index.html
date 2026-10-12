@@ -147,6 +147,8 @@
   .hero .eyebrow { color: rgba(255,255,255,.85); }
   .hero h2 { font-family: var(--script); font-weight: 400; font-size: clamp(3rem, 12vw, 5.5rem); line-height: 1.1; margin: 10px 0; text-shadow: 0 2px 20px rgba(0,0,0,.25); }
   .hero h2 span { display: block; font-size: .5em; font-family: var(--serif); font-style: italic; }
+  /* Dấu & của Great Vibes có phần thân nằm cao trong dòng -> hạ xuống cho cân giữa hai tên */
+  .hero h2 .hero-amp { font-family: var(--script); font-style: normal; font-size: 1em; line-height: 1; transform: translateY(.14em); }
   .hero .date { font-family: var(--serif); letter-spacing: .25em; font-size: 1rem; }
   .scroll-hint { margin-top: 26px; font-size: .75rem; letter-spacing: .2em; opacity: .85; animation: bob 2s infinite; }
   @keyframes bob { 50% { transform: translateY(6px); } }
@@ -356,7 +358,7 @@
   <header class="hero" id="hero">
     <div class="hero-inner">
       <p class="eyebrow">Save the date</p>
-      <h2><span data-text="groom"></span>&amp;<span data-text="bride"></span></h2>
+      <h2><span data-text="groom"></span><span class="hero-amp">&amp;</span><span data-text="bride"></span></h2>
       <p class="date" id="heroDate"></p>
       <p class="scroll-hint">CUỘN XUỐNG ↓</p>
     </div>
