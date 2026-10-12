@@ -8,7 +8,9 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Thiệp cưới Hoàng Nam & Minh Anh">
 <meta property="og:description" content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình.">
-<meta property="og:image" content="images/03.jpg">
+<meta property="og:image" content="images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="theme-color" content="#f7e8e6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,6 +109,10 @@
   .hero {
     min-height: 100svh; padding: 0; position: relative; display: grid; place-items: end center;
     background: var(--hero) center / cover no-repeat; color: #fff; text-align: center;
+  }
+  /* Màn hình ngang (máy tính, máy tính bảng xoay ngang): dùng ảnh 16:9 */
+  @media (min-aspect-ratio: 1/1) {
+    .hero { background-image: var(--hero-wide); background-position: center 35%; }
   }
   .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.05) 40%, rgba(60,30,35,.65)); }
   .hero-inner { position: relative; z-index: 1; padding: 0 16px 72px; }
@@ -438,13 +444,14 @@ const CONFIG = {
   brideMother: "Bà Phạm Thị Lan",
   brideHome: "Số 45, Nguyễn Trãi, Thanh Xuân, Hà Nội",
 
-  coverPhoto: "images/03.jpg",
-  heroPhoto: "images/03.jpg",
-  groomPhoto: "images/01.jpg",
-  bridePhoto: "images/02.jpg",
+  coverPhoto: "images/cover.jpg",      // vuông 400x400
+  heroPhoto: "images/hero.jpg",        // dọc, cho điện thoại
+  heroPhotoWide: "images/hero-wide.jpg", // ngang 16:9, cho máy tính
+  groomPhoto: "images/groom.jpg",
+  bridePhoto: "images/bride.jpg",
 
   // Album: thêm/bớt ảnh tùy ý (nên dùng ảnh gốc độ phân giải cao)
-  gallery: ["images/03.jpg", "images/14.jpg", "images/01.jpg", "images/02.jpg"],
+  gallery: ["images/07.jpg", "images/01.jpg", "images/02.jpg", "images/03.jpg", "images/04.jpg", "images/05.jpg", "images/06.jpg"],
 
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
@@ -483,6 +490,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;"
 document.querySelectorAll("[data-text]").forEach(el => el.textContent = CONFIG[el.dataset.text] || "");
 document.querySelectorAll("[data-src]").forEach(el => el.src = CONFIG[el.dataset.src]);
 $("#hero").style.setProperty("--hero", `url("${CONFIG.heroPhoto}")`);
+$("#hero").style.setProperty("--hero-wide", `url("${CONFIG.heroPhotoWide || CONFIG.heroPhoto}")`);
 $("#rsvpNote").textContent = CONFIG.rsvpDeadline;
 document.title = `Thiệp cưới ${CONFIG.groom} & ${CONFIG.bride}`;
 
