@@ -711,7 +711,17 @@ document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 const bgm = $("#bgm"), mBtn = $("#musicBtn");
 if (CONFIG.music) {
   bgm.src = CONFIG.music;
-  bgm.addEventListener("play", () => mBtn.classList.add("playing"));
+  // Nhạc to dần trong 2 giây mỗi lần bắt đầu phát
+  bgm.addEventListener("play", () => {
+    mBtn.classList.add("playing");
+    bgm.volume = 0;
+    const t0 = performance.now();
+    (function fade(now) {
+      const k = Math.min(1, (now - t0) / 2000);
+      bgm.volume = 0.8 * k;
+      if (k < 1 && !bgm.paused) requestAnimationFrame(fade);
+    })(t0);
+  });
   bgm.addEventListener("pause", () => mBtn.classList.remove("playing"));
   bgm.addEventListener("error", () => mBtn.hidden = true);
   mBtn.onclick = () => bgm.paused ? bgm.play().catch(() => {}) : bgm.pause();
