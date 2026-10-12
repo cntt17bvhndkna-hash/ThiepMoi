@@ -89,7 +89,7 @@
   /* ---------- Petals + music ---------- */
   #petals { position: fixed; inset: 0; pointer-events: none; z-index: 40; }
   .music-btn {
-    position: fixed; right: 16px; bottom: 16px; z-index: 45; width: 48px; height: 48px;
+    position: fixed; right: 16px; bottom: 16px; z-index: 55; width: 48px; height: 48px;
     border-radius: 50%; border: 0; cursor: pointer; background: var(--card); color: var(--rose-deep);
     box-shadow: var(--shadow); display: grid; place-items: center; font-size: 1.2rem;
   }
@@ -282,8 +282,24 @@
   .form-msg.err { color: #c0392b; }
 
   .rsvp-sec { background: var(--bg-soft); }
-  footer { padding: 60px 16px 90px; text-align: center; background: var(--bg); }
-  footer .title { font-size: 2.6rem; }
+  /* Phần cảm ơn: ảnh nền full, chữ nằm trên mảng tường sáng phía trên ảnh */
+  .thanks {
+    position: relative; min-height: 100svh; padding: 72px 16px 90px; text-align: center;
+    display: grid; align-items: start; justify-items: center; overflow: hidden;
+    /* Màn hình dọc: ảnh rộng hết khung, bám đáy; phần trên trống để đặt chữ, không đè lên mặt */
+    background: var(--thanks) center bottom / 100% auto no-repeat var(--bg-soft);
+  }
+  @media (min-aspect-ratio: 1/1) {
+    .thanks { background-image: var(--thanks-wide); background-size: cover; background-position: center 30%; }
+  }
+  .thanks::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(253,247,245,.88) 0%, rgba(253,247,245,.55) 28%, rgba(253,247,245,0) 52%);
+  }
+  .thanks-inner { position: relative; max-width: 520px; }
+  .thanks .title { font-size: clamp(3rem, 11vw, 4.4rem); margin-bottom: 4px; }
+  .thanks-text { font-family: var(--serif); font-style: italic; font-size: 1rem; color: var(--text); }
+  .thanks-sign { font-family: var(--script); font-size: 1.8rem; color: var(--rose-deep); margin-top: 8px; }
 
 
   @media (max-width: 560px) {
@@ -315,7 +331,7 @@
 
 <canvas id="petals" aria-hidden="true"></canvas>
 <button class="music-btn" id="musicBtn" aria-label="Bật/tắt nhạc" hidden>♫</button>
-<audio id="bgm" loop preload="none"></audio>
+<audio id="bgm" loop preload="auto"></audio>
 
 <main>
   <!-- Hero -->
@@ -416,7 +432,7 @@
         <fieldset class="field">
           <legend>Bạn sẽ tham dự chứ? *</legend>
           <div class="choices">
-            <label><input type="radio" name="attend" value="Có" checked> Chắc chắn rồi!</label>
+            <label><input type="radio" name="attend" value="Có" checked> Chắc chắn rồi, mình sẽ tham gia</label>
             <label><input type="radio" name="attend" value="Không"> Rất tiếc, mình không tham gia được</label>
           </div>
         </fieldset>
@@ -446,10 +462,13 @@
     </div>
   </section>
 
-  <footer>
-    <p class="eyebrow">Thank you</p>
-    <h3 class="title" data-text="coupleShort"></h3>
-    <p style="color:var(--muted);font-size:.9rem">Rất hân hạnh được đón tiếp!</p>
+  <footer class="thanks" id="thanks">
+    <div class="thanks-inner reveal">
+      <p class="eyebrow">Thank you</p>
+      <h3 class="title">Cảm ơn</h3>
+      <p class="thanks-text">Sự hiện diện của bạn là niềm hạnh phúc của gia đình chúng mình.<br>Rất hân hạnh được đón tiếp!</p>
+      <p class="thanks-sign" data-text="coupleShort"></p>
+    </div>
   </footer>
 </main>
 
@@ -488,13 +507,15 @@ const CONFIG = {
   coverPhoto: "images/cover.jpg",      // vuông 400x400
   heroPhoto: "images/hero.jpg",        // dọc, cho điện thoại
   heroPhotoWide: "images/hero-wide.jpg", // ngang 16:9, cho máy tính
+  thanksPhoto: "images/thanks.jpg",          // nền phần cảm ơn (ảnh 8), dọc
+  thanksPhotoWide: "images/thanks-wide.jpg", // ngang 16:9
   groomPhoto: "images/groom.jpg",
   bridePhoto: "images/bride.jpg",
 
   // Album: thêm/bớt ảnh tùy ý (nên dùng ảnh gốc độ phân giải cao)
   // Ảnh đầu tiên hiện ô to; hiện 6 ô, ảnh thứ 7 trở đi xem trong lightbox (ô cuối hiện "+N")
-  // Không dùng lại ảnh 3 (bìa mở thiệp) và ảnh 7 (ảnh đầu trang)
-  gallery: ["images/01.jpg", "images/04.jpg", "images/02.jpg", "images/06.jpg", "images/05.jpg"],
+  // Không dùng lại ảnh 3 (bìa mở thiệp), ảnh 7 (ảnh đầu trang), ảnh 6 (chân dung cô dâu)
+  gallery: ["images/01.jpg", "images/04.jpg", "images/02.jpg", "images/05.jpg"],
 
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
@@ -534,6 +555,8 @@ document.querySelectorAll("[data-text]").forEach(el => el.textContent = CONFIG[e
 document.querySelectorAll("[data-src]").forEach(el => el.src = CONFIG[el.dataset.src]);
 $("#hero").style.setProperty("--hero", `url("${CONFIG.heroPhoto}")`);
 $("#hero").style.setProperty("--hero-wide", `url("${CONFIG.heroPhotoWide || CONFIG.heroPhoto}")`);
+$("#thanks").style.setProperty("--thanks", `url("${CONFIG.thanksPhoto}")`);
+$("#thanks").style.setProperty("--thanks-wide", `url("${CONFIG.thanksPhotoWide || CONFIG.thanksPhoto}")`);
 $("#rsvpNote").textContent = CONFIG.rsvpDeadline;
 document.title = `Thiệp cưới ${CONFIG.groom} & ${CONFIG.bride}`;
 
@@ -755,7 +778,26 @@ if (CONFIG.music) {
   });
   bgm.addEventListener("pause", () => mBtn.classList.remove("playing"));
   bgm.addEventListener("error", () => mBtn.hidden = true);
-  mBtn.onclick = () => bgm.paused ? bgm.play().catch(() => {}) : bgm.pause();
+  let userPaused = false;   // khách tự tắt nhạc thì không tự bật lại
+  mBtn.onclick = () => {
+    if (bgm.paused) { userPaused = false; bgm.play().catch(() => {}); }
+    else { userPaused = true; bgm.pause(); }
+  };
+  mBtn.hidden = false;
+
+  // Phát ngay khi mở trang; nếu trình duyệt chặn tự phát thì phát ở lần chạm/bấm phím đầu tiên
+  const GESTURES = ["pointerdown", "touchstart", "keydown"];
+  const unbind = () => GESTURES.forEach(ev => removeEventListener(ev, onGesture, true));
+  var tryPlay = () => {
+    if (userPaused || !bgm.paused) return;
+    bgm.play().then(unbind).catch(() => {});
+  };
+  function onGesture(e) {
+    if (mBtn.contains(e.target)) return;   // nút nhạc tự xử lý, tránh vừa bật đã tắt
+    tryPlay();
+  }
+  GESTURES.forEach(ev => addEventListener(ev, onGesture, { capture: true, passive: true }));
+  tryPlay();
 }
 
 // ---- Open invitation ----
@@ -763,9 +805,7 @@ $("#openBtn").onclick = () => {
   $("#cover").classList.add("hide");
   document.body.classList.remove("locked");
   document.body.classList.add("opened");
-  if (CONFIG.music) {
-    bgm.play().then(() => mBtn.hidden = false).catch(() => mBtn.hidden = !bgm.src);
-  }
+  if (CONFIG.music) tryPlay();
   if (!reduceMotion) startPetals();
 };
 
@@ -799,6 +839,13 @@ function startPetals() {
 }
 
 // ---- RSVP ----
+// Body dạng URLSearchParams là "simple request" (không preflight); Apps Script trả
+// Access-Control-Allow-Origin: * nên đọc được JSON {ok, error} để biết Sheet đã ghi hay chưa
+async function postSheet(fields) {
+  const res = await fetch(CONFIG.rsvpUrl, { method: "POST", body: new URLSearchParams(fields) });
+  const out = await res.json().catch(() => ({ ok: res.ok }));
+  if (!out.ok) throw new Error(out.error || `HTTP ${res.status}`);
+}
 $("#rsvpForm").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, msg = $("#formMsg"), btn = $("#rsvpBtn");
@@ -807,22 +854,28 @@ $("#rsvpForm").addEventListener("submit", async e => {
     msg.className = "form-msg err"; msg.textContent = "Vui lòng nhập họ tên của bạn.";
     nameEl.focus(); return;
   }
-  const data = new URLSearchParams(new FormData(f));
-  data.append("time", new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }));
+  const name = nameEl.value.trim();
+  const message = f.elements.namedItem("message").value.trim();
   btn.disabled = true; btn.textContent = "Đang gửi...";
   msg.className = "form-msg"; msg.textContent = "";
   try {
-    // no-cors: Apps Script không trả header CORS, nên không đọc được phản hồi — chỉ cần request tới nơi
-    await fetch(CONFIG.rsvpUrl, { method: "POST", mode: "no-cors", body: data });
+    // Script ghi 2 sheet: type=rsvp -> "RSVP", type=wish -> "LoiChuc".
+    // RSVP chỉ gửi 1 lần; nếu lời chúc lỗi và khách bấm gửi lại thì không tạo dòng RSVP trùng.
+    if (!f.dataset.rsvpDone) {
+      await postSheet({ type: "rsvp", name, attend: f.attend.value, guests: f.guests.value, side: f.side.value });
+      f.dataset.rsvpDone = "1";
+    }
+    if (message) await postSheet({ type: "wish", name, message });
     msg.className = "form-msg ok";
     msg.textContent = f.attend.value === "Có"
-      ? `Cảm ơn ${nameEl.value.trim()}! Hẹn gặp bạn trong ngày vui nhé ♥`
-      : `Cảm ơn ${nameEl.value.trim()} đã gửi lời chúc ♥`;
+      ? `Cảm ơn ${name}! Hẹn gặp bạn trong ngày vui nhé ♥`
+      : `Cảm ơn ${name} đã gửi lời chúc ♥`;
     btn.textContent = "Đã gửi ✓";
     f.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
-  } catch {
+  } catch (err) {
+    console.error("RSVP lỗi:", err);
     msg.className = "form-msg err";
-    msg.textContent = "Không gửi được, vui lòng kiểm tra mạng và thử lại.";
+    msg.textContent = "Không gửi được, vui lòng thử lại sau ít phút.";
     btn.disabled = false; btn.textContent = "Gửi xác nhận";
   }
 });
