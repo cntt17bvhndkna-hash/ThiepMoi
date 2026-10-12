@@ -52,6 +52,8 @@
     transition: opacity .9s ease, visibility .9s;
   }
   .cover.hide { opacity: 0; visibility: hidden; }
+  .cover-card { transition: transform .9s cubic-bezier(.2,.7,.2,1), opacity .7s ease; }
+  .cover.hide .cover-card { transform: translateY(-24px) scale(1.06); opacity: 0; }
   .cover-card {
     width: min(380px, 100%); text-align: center; padding: 36px 28px 32px;
     background: var(--card); border-radius: 200px 200px 24px 24px;
@@ -106,16 +108,38 @@
   .divider::before, .divider::after { content: ""; width: 60px; height: 1px; background: var(--blush); }
   .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s ease; }
   .reveal.in { opacity: 1; transform: none; }
+  /* Các phần tử con hiện lần lượt khi khối cha cuộn tới */
+  .stagger > * { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; transition-delay: var(--d, 0ms); }
+  .stagger > :nth-child(2) { --d: 120ms; }
+  .stagger > :nth-child(3) { --d: 240ms; }
+  .stagger > :nth-child(4) { --d: 360ms; }
+  .reveal.in .stagger > * { opacity: 1; transform: none; }
+  /* Đường kẻ hai bên trái tim dài ra */
+  .divider::before, .divider::after { width: 0; transition: width 1s ease .3s; }
+  .reveal.in .divider::before, .reveal.in .divider::after { width: 60px; }
 
   /* ---------- Hero ---------- */
   .hero {
     min-height: 100svh; padding: 0; position: relative; display: grid; place-items: end center;
-    background: var(--hero) center / cover no-repeat; color: #fff; text-align: center;
+    color: #fff; text-align: center; overflow: hidden; background: var(--text);
   }
+  /* Ảnh nền nằm ở ::before để zoom chậm (Ken Burns) mà không làm chữ zoom theo */
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--hero) center / cover no-repeat;
+    transform: scale(1.12); transition: transform 9s cubic-bezier(.2,.6,.2,1);
+  }
+  body.opened .hero::before { transform: scale(1); }
   /* Màn hình ngang (máy tính, máy tính bảng xoay ngang): dùng ảnh 16:9 */
   @media (min-aspect-ratio: 1/1) {
-    .hero { background-image: var(--hero-wide); background-position: center 35%; }
+    .hero::before { background-image: var(--hero-wide); background-position: center 35%; }
   }
+  .hero-inner > * { opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; }
+  body.opened .hero-inner > * { opacity: 1; transform: none; }
+  body.opened .hero-inner > :nth-child(1) { transition-delay: .5s; }
+  body.opened .hero-inner > :nth-child(2) { transition-delay: .8s; }
+  body.opened .hero-inner > :nth-child(3) { transition-delay: 1.1s; }
+  body.opened .hero-inner > :nth-child(4) { transition-delay: 1.5s; }
   .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.05) 40%, rgba(60,30,35,.65)); }
   .hero-inner { position: relative; z-index: 1; padding: 0 16px 72px; }
   .hero .eyebrow { color: rgba(255,255,255,.85); }
@@ -173,6 +197,8 @@
   .person img { width: 100%; max-width: 220px; aspect-ratio: 3/4; object-fit: cover; margin: 0 auto 12px; border-radius: 120px 120px 16px 16px; box-shadow: var(--shadow); }
   .person .role { font-size: .72rem; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); }
   .person .name { font-family: var(--script); font-size: clamp(1.8rem, 6vw, 2.4rem); color: var(--rose-deep); line-height: 1.2; }
+  .person img { scale: .94; transition: scale 1.4s cubic-bezier(.2,.7,.2,1) .2s; }
+  .reveal.in .person img { scale: 1; }
   .amp { font-family: var(--script); font-size: 3rem; color: var(--gold); }
 
   /* ---------- Events ---------- */
@@ -191,17 +217,19 @@
   .event .btn { padding: 9px 16px; font-size: .82rem; }
 
   /* ---------- Gallery ---------- */
-  .gallery-sec { background: var(--bg-soft); }
-  /* Lưới gọn: ảnh đầu to (2x2), các ảnh còn lại ô nhỏ 3:4; ô cuối hiện "+N" nếu còn ảnh */
+  /* Lưới 6 cột: ảnh đầu to (4 cột x 2 hàng), ô nhỏ 2 cột tỉ lệ 3:4.
+     Hàng cuối tự giãn cho kín: còn 2 ảnh -> mỗi ảnh 3 cột, còn 1 ảnh -> trải hết 6 cột. */
   .gallery {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
     max-width: 720px; margin: 0 auto;
   }
   .gallery button {
-    position: relative; border: 0; padding: 0; cursor: zoom-in; display: block;
+    position: relative; border: 0; padding: 0; cursor: zoom-in; display: block; grid-column: span 2;
     border-radius: 12px; overflow: hidden; background: var(--blush); aspect-ratio: 3 / 4;
   }
-  .gallery button.big { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+  .gallery button.big { grid-column: span 4; grid-row: span 2; aspect-ratio: auto; }
+  .gallery button.half { grid-column: span 3; aspect-ratio: 1; }
+  .gallery button.full { grid-column: span 6; aspect-ratio: 16 / 9; }
   .gallery img {
     width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
     transition: transform .6s ease;
@@ -253,7 +281,8 @@
   .form-msg.ok { color: #4f8a5b; }
   .form-msg.err { color: #c0392b; }
 
-  footer { padding: 60px 16px 90px; text-align: center; background: var(--bg-soft); }
+  .rsvp-sec { background: var(--bg-soft); }
+  footer { padding: 60px 16px 90px; text-align: center; background: var(--bg); }
   footer .title { font-size: 2.6rem; }
 
 
@@ -299,21 +328,6 @@
     </div>
   </header>
 
-  <!-- Countdown -->
-  <section class="countdown-sec center">
-    <div class="reveal">
-      <p class="eyebrow">Cùng đếm ngược</p>
-      <h3 class="title">Ngày chung đôi</h3>
-      <div class="calendar" id="calendar" aria-label="Lịch tháng cưới"></div>
-      <div class="countdown" id="countdown">
-        <div><b id="cdD">00</b><small>Ngày</small></div>
-        <div><b id="cdH">00</b><small>Giờ</small></div>
-        <div><b id="cdM">00</b><small>Phút</small></div>
-        <div><b id="cdS">00</b><small>Giây</small></div>
-      </div>
-    </div>
-  </section>
-
   <!-- Invitation -->
   <section class="center">
     <div class="narrow reveal">
@@ -321,7 +335,7 @@
       <h3 class="title">Chúng mình cưới!</h3>
       <div class="divider">♥</div>
       <p class="invite-text" data-text="inviteText"></p>
-      <div class="families">
+      <div class="families stagger">
         <div class="family">
           <h4>Nhà trai</h4>
           <p data-text="groomFather"></p>
@@ -335,7 +349,7 @@
           <p class="addr" data-text="brideHome"></p>
         </div>
       </div>
-      <div class="couple">
+      <div class="couple stagger">
         <div class="person">
           <img data-src="groomPhoto" alt="Chú rể" loading="lazy">
           <p class="role">Chú rể</p>
@@ -357,22 +371,37 @@
       <p class="eyebrow">Sự kiện</p>
       <h3 class="title">Lịch trình ngày cưới</h3>
       <div class="divider">♥</div>
-      <div class="events" id="events"></div>
+      <div class="events stagger" id="events"></div>
+    </div>
+  </section>
+
+  <!-- Countdown -->
+  <section class="countdown-sec center">
+    <div class="reveal">
+      <p class="eyebrow">Cùng đếm ngược</p>
+      <h3 class="title">Ngày chung đôi</h3>
+      <div class="calendar" id="calendar" aria-label="Lịch tháng cưới"></div>
+      <div class="countdown stagger" id="countdown">
+        <div><b id="cdD">00</b><small>Ngày</small></div>
+        <div><b id="cdH">00</b><small>Giờ</small></div>
+        <div><b id="cdM">00</b><small>Phút</small></div>
+        <div><b id="cdS">00</b><small>Giây</small></div>
+      </div>
     </div>
   </section>
 
   <!-- Gallery -->
-  <section class="gallery-sec center">
+  <section class="center">
     <div class="wrap reveal">
       <p class="eyebrow">Album</p>
       <h3 class="title">Khoảnh khắc của chúng mình</h3>
       <div class="divider">♥</div>
-      <div class="gallery" id="gallery"></div>
+      <div class="gallery stagger" id="gallery"></div>
     </div>
   </section>
 
   <!-- RSVP -->
-  <section id="rsvp">
+  <section id="rsvp" class="rsvp-sec">
     <div class="narrow reveal">
       <div class="center">
         <p class="eyebrow">RSVP</p>
@@ -384,15 +413,11 @@
           <label for="f-name">Họ và tên *</label>
           <input type="text" id="f-name" name="name" required autocomplete="name" placeholder="Nguyễn Văn A">
         </div>
-        <div class="field">
-          <label for="f-phone">Số điện thoại</label>
-          <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="09xx xxx xxx">
-        </div>
         <fieldset class="field">
           <legend>Bạn sẽ tham dự chứ? *</legend>
           <div class="choices">
             <label><input type="radio" name="attend" value="Có" checked> Chắc chắn rồi!</label>
-            <label><input type="radio" name="attend" value="Không"> Rất tiếc, không thể</label>
+            <label><input type="radio" name="attend" value="Không"> Rất tiếc, mình không tham gia được</label>
           </div>
         </fieldset>
         <div class="row2">
@@ -468,7 +493,8 @@ const CONFIG = {
 
   // Album: thêm/bớt ảnh tùy ý (nên dùng ảnh gốc độ phân giải cao)
   // Ảnh đầu tiên hiện ô to; hiện 6 ô, ảnh thứ 7 trở đi xem trong lightbox (ô cuối hiện "+N")
-  gallery: ["images/01.jpg", "images/04.jpg", "images/02.jpg", "images/06.jpg", "images/05.jpg", "images/03.jpg", "images/07.jpg"],
+  // Không dùng lại ảnh 3 (bìa mở thiệp) và ảnh 7 (ảnh đầu trang)
+  gallery: ["images/01.jpg", "images/04.jpg", "images/02.jpg", "images/06.jpg", "images/05.jpg"],
 
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
@@ -629,11 +655,16 @@ const gal = CONFIG.gallery;
 // Hiện tối đa 6 ô (1 to + 5 nhỏ); ảnh thumbnail lấy từ thư mục thumbs/, lỗi thì dùng ảnh gốc
 const SHOW = 6;
 const thumb = src => src.replace(/([^/]+)$/, "thumbs/$1");
+const shown = Math.min(gal.length, SHOW);
+const tail = Math.max(0, shown - 3) % 3;   // số ô lẻ ở hàng cuối (dưới ảnh to)
 $("#gallery").innerHTML = gal.slice(0, SHOW).map((src, i) => {
   const rest = gal.length - SHOW;
   const more = i === SHOW - 1 && rest > 0 ? `<span class="more">+${rest}<small>Xem thêm</small></span>` : "";
+  const cls = i === 0 ? "big"
+    : i >= 3 && tail === 2 && i >= shown - 2 ? "half"
+    : i >= 3 && tail === 1 && i === shown - 1 ? "full" : "";
   // Bấm ô "+N" thì mở thẳng ảnh ẩn đầu tiên
-  return `<button type="button" data-i="${more ? SHOW : i}"${i === 0 ? ' class="big"' : ""} aria-label="Xem ảnh ${i + 1}">`
+  return `<button type="button" data-i="${more ? SHOW : i}"${cls ? ` class="${cls}"` : ""} style="--d:${i * 90}ms" aria-label="Xem ảnh ${i + 1}">`
     + `<img src="${esc(thumb(src))}" onerror="this.onerror=null;this.src='${esc(src)}'" alt="Ảnh cưới ${i + 1}" loading="lazy">${more}</button>`;
 }).join("");
 const lb = $("#lightbox");
@@ -731,6 +762,7 @@ if (CONFIG.music) {
 $("#openBtn").onclick = () => {
   $("#cover").classList.add("hide");
   document.body.classList.remove("locked");
+  document.body.classList.add("opened");
   if (CONFIG.music) {
     bgm.play().then(() => mBtn.hidden = false).catch(() => mBtn.hidden = !bgm.src);
   }
