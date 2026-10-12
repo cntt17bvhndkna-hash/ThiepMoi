@@ -53,7 +53,7 @@
   }
   .cover.hide { opacity: 0; visibility: hidden; }
   .cover-card {
-    width: min(360px, 100%); text-align: center; padding: 44px 28px 36px;
+    width: min(380px, 100%); text-align: center; padding: 36px 28px 32px;
     background: var(--card); border-radius: 200px 200px 24px 24px;
     box-shadow: var(--shadow); border: 1px solid var(--line); position: relative;
   }
@@ -62,8 +62,10 @@
     border: 1px solid var(--blush); pointer-events: none;
   }
   .cover-photo {
-    width: 150px; height: 150px; margin: 0 auto 18px; border-radius: 50%;
-    object-fit: cover; border: 4px solid var(--bg-soft);
+    /* Khung vòm dọc 3:4, co lại trên màn hình thấp để nút "Mở thiệp" không bị đẩy ra ngoài */
+    width: min(250px, 66vw, 36svh); aspect-ratio: 3 / 4; height: auto; margin: 0 auto 16px;
+    border-radius: 999px 999px 18px 18px; object-fit: cover; object-position: center top;
+    border: 4px solid var(--bg-soft);
   }
   .cover small { letter-spacing: .3em; text-transform: uppercase; font-size: .7rem; color: var(--muted); }
   .cover h1 { font-family: var(--script); font-weight: 400; font-size: 2.6rem; color: var(--rose-deep); line-height: 1.2; margin: 8px 0 4px; }
