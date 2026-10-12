@@ -294,8 +294,8 @@
   }
   .thanks-photo {
     position: absolute; inset: 0;
-    /* Điện thoại: ảnh dọc, lệch trái một chút để giữ trọn cả hai người khi bị cắt hai bên */
-    background: var(--thanks) 35% top / cover no-repeat;
+    /* Ảnh đã được cắt sẵn sao cho tâm cặp đôi nằm giữa khung -> chỉ cần căn giữa */
+    background: var(--thanks) center top / cover no-repeat;
   }
   .thanks-photo::before, .thanks-photo::after { content: ""; position: absolute; left: 0; right: 0; }
   .thanks-photo::before { top: 0; height: 30%; background: linear-gradient(to bottom, rgba(253,247,245,.85), rgba(253,247,245,.45) 55%, rgba(253,247,245,0)); }
@@ -304,7 +304,7 @@
   .thanks-head { padding-top: 40px; }
   .thanks-foot { padding-bottom: 84px; }   /* chừa chỗ cho nút nhạc ở góc dưới */
   @media (min-aspect-ratio: 1/1) {
-    .thanks-photo { background-image: var(--thanks-wide); background-position: center 30%; }
+    .thanks-photo { background-image: var(--thanks-wide); background-position: center; }
     .thanks-head { padding-top: 56px; }
     .thanks-foot { padding-bottom: 56px; }
   }
