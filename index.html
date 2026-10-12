@@ -55,7 +55,7 @@
   .cover-card { transition: transform .9s cubic-bezier(.2,.7,.2,1), opacity .7s ease; }
   .cover.hide .cover-card { transform: translateY(-24px) scale(1.06); opacity: 0; }
   .cover-card {
-    width: min(380px, 100%); text-align: center; padding: 36px 28px 32px;
+    width: min(440px, 100%); text-align: center; padding: 32px 24px 28px;
     background: var(--card); border-radius: 200px 200px 24px 24px;
     box-shadow: var(--shadow); border: 1px solid var(--line); position: relative;
   }
@@ -65,7 +65,7 @@
   }
   .cover-photo {
     /* Khung vòm dọc 3:4, co lại trên màn hình thấp để nút "Mở thiệp" không bị đẩy ra ngoài */
-    width: min(250px, 66vw, 36svh); aspect-ratio: 3 / 4; height: auto; margin: 0 auto 16px;
+    width: clamp(180px, min(80vw, (100svh - 380px) * .75), 360px); aspect-ratio: 3 / 4; height: auto; margin: 0 auto 16px;
     border-radius: 999px 999px 18px 18px; object-fit: cover; object-position: center top;
     border: 4px solid var(--bg-soft);
   }
@@ -132,7 +132,9 @@
   body.opened .hero::before { transform: scale(1); }
   /* Màn hình ngang (máy tính, máy tính bảng xoay ngang): dùng ảnh 16:9 */
   @media (min-aspect-ratio: 1/1) {
-    .hero::before { background-image: var(--hero-wide); background-position: center 35%; }
+    /* Máy tính: cao theo tỉ lệ ảnh (1920x1687) để thấy hai người từ đầu xuống gần chân */
+    .hero { min-height: max(100svh, 87.9vw); }
+    .hero::before { background-image: var(--hero-wide); background-position: center top; }
   }
   .hero-inner > * { opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; }
   body.opened .hero-inner > * { opacity: 1; transform: none; }
@@ -288,9 +290,10 @@
      - Màn hình ngang (máy tính): ảnh phủ kín, chữ nằm trên mảng tường phía trên */
   /* Ảnh phủ kín 1 màn hình; tiêu đề nằm trên mảng tường phía trên ảnh,
      lời nhắn + chữ ký nằm ở mép dưới ảnh, mỗi khối có lớp mờ sáng phía sau cho dễ đọc */
-  .thanks {
+  .thanks { background: var(--bg-soft); }
+  .thanks-frame {
     position: relative; min-height: 100svh; text-align: center; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: space-between; background: var(--bg-soft);
+    display: flex; flex-direction: column; justify-content: space-between;
   }
   .thanks-photo {
     position: absolute; inset: 0;
@@ -303,10 +306,14 @@
   .thanks-head, .thanks-foot { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 16px; }
   .thanks-head { padding-top: 40px; }
   .thanks-foot { padding-bottom: 84px; }   /* chừa chỗ cho nút nhạc ở góc dưới */
+  /* Màn hình ngang (máy tính): ảnh tràn hết chiều ngang như ảnh đầu trang,
+     cao theo tỉ lệ ảnh (1920x1684), hai người nằm giữa */
   @media (min-aspect-ratio: 1/1) {
-    .thanks-photo { background-image: var(--thanks-wide); background-position: center; }
-    .thanks-head { padding-top: 56px; }
+    .thanks-frame { min-height: max(100svh, 87.7vw); }
+    .thanks-photo { background-image: var(--thanks-wide); background-position: center top; }
+    .thanks-head { padding-top: 48px; }
     .thanks-foot { padding-bottom: 56px; }
+    .thanks-text { font-size: 1.15rem; }
   }
   .thanks .title { font-size: clamp(3rem, 11vw, 4.4rem); margin-bottom: 4px; }
   .thanks-text { font-family: var(--serif); font-style: italic; font-size: 1rem; color: var(--text); }
@@ -473,7 +480,8 @@
     </div>
   </section>
 
-  <footer class="thanks" id="thanks">
+  <footer class="thanks">
+   <div class="thanks-frame" id="thanks">
     <div class="thanks-head reveal">
       <p class="eyebrow">Thank you</p>
       <h3 class="title">Cảm ơn</h3>
@@ -483,6 +491,7 @@
       <p class="thanks-text">Sự hiện diện của bạn là niềm hạnh phúc của gia đình chúng mình.<br>Rất hân hạnh được đón tiếp!</p>
       <p class="thanks-sign" data-text="coupleShort"></p>
     </div>
+   </div>
   </footer>
 </main>
 
@@ -520,9 +529,9 @@ const CONFIG = {
 
   coverPhoto: "images/cover.jpg",      // vuông 400x400
   heroPhoto: "images/hero.jpg",        // dọc, cho điện thoại
-  heroPhotoWide: "images/hero-wide.jpg", // ngang 16:9, cho máy tính
-  thanksPhoto: "images/thanks.jpg",          // nền phần cảm ơn (ảnh 4), dọc
-  thanksPhotoWide: "images/thanks-wide.jpg", // ngang 16:9
+  heroPhotoWide: "images/hero-wide.jpg", // cho máy tính (1920x1687, từ đầu xuống gần chân)
+  thanksPhoto: "images/thanks.jpg",          // nền phần cảm ơn (ảnh 4), dọc, cho điện thoại
+  thanksPhotoWide: "images/thanks-wide.jpg", // cho máy tính
   groomPhoto: "images/groom.jpg",
   bridePhoto: "images/bride.jpg",
 
