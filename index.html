@@ -286,6 +286,34 @@
   .form-msg.err { color: #c0392b; }
 
   .rsvp-sec { background: var(--bg-soft); }
+
+  /* ---------- Lời chúc (băng chạy) ---------- */
+  .wishes-sec { background: var(--bg); padding-left: 0; padding-right: 0; overflow: hidden; }
+  .wishes-sec > .reveal, .wish-empty { padding: 0 16px; }
+  .wish-count { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+  .wish-empty { color: var(--muted); }
+  .wish-empty a { color: var(--rose-deep); font-weight: 500; }
+  .marquee {
+    overflow: hidden; padding: 10px 0 18px; cursor: grab;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee .track { display: flex; gap: 14px; width: max-content; animation: marquee var(--dur, 40s) linear infinite; }
+  .marquee.reverse .track { animation-direction: reverse; }
+  .marquee:hover .track, .marquee.paused .track { animation-play-state: paused; }
+  @keyframes marquee { to { transform: translateX(calc(-50% - 7px)); } }   /* -7px = nửa gap, nối vòng liền mạch */
+  .wish {
+    flex: none; width: 260px; position: relative; text-align: left;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 18px 14px; box-shadow: 0 6px 18px rgba(181, 96, 107, .1);
+  }
+  .wish::after { content: "♥"; position: absolute; top: 10px; right: 14px; color: var(--blush); font-size: 1.1rem; }
+  .wish p {
+    font-family: var(--serif); font-style: italic; font-size: .95rem; line-height: 1.6; color: var(--text);
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .wish b { display: block; margin-top: 10px; font-weight: 500; font-size: .85rem; color: var(--rose-deep); }
+  @media (max-width: 560px) { .wish { width: 220px; } }
   /* Phần cảm ơn
      - Màn hình dọc (điện thoại): chữ ở trên, ảnh xếp ngay dưới, mép trên ảnh mờ dần vào nền
        -> không có đường cắt ngang, chữ không bao giờ đè lên người
@@ -333,6 +361,9 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .reveal { opacity: 1; transform: none; }
     html { scroll-behavior: auto; }
+    /* Không chạy băng: cho khách tự vuốt ngang */
+    .marquee { overflow-x: auto; scroll-snap-type: x mandatory; padding-left: 16px; padding-right: 16px; -webkit-mask-image: none; mask-image: none; }
+    .wish { scroll-snap-align: center; }
   }
 </style>
 </head>
@@ -480,6 +511,18 @@
         <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
       </form>
     </div>
+  </section>
+
+  <!-- Lời chúc: tải từ Google Sheet (LoiChuc), hiện dạng băng chạy -->
+  <section class="wishes-sec center" id="wishes" hidden>
+    <div class="reveal">
+      <p class="eyebrow">Lời chúc</p>
+      <h3 class="title">Gửi đến hai bạn</h3>
+      <p class="wish-count" id="wishCount"></p>
+    </div>
+    <div class="marquee" id="wishRow1"><div class="track"></div></div>
+    <div class="marquee reverse" id="wishRow2"><div class="track"></div></div>
+    <p class="wish-empty" id="wishEmpty" hidden>Hãy là người đầu tiên gửi lời chúc ♥ <a href="#rsvp">Gửi ngay</a></p>
   </section>
 
   <footer class="thanks">
@@ -885,6 +928,53 @@ async function postSheet(fields) {
   const out = await res.json().catch(() => ({ ok: res.ok }));
   if (!out.ok) throw new Error(out.error || `HTTP ${res.status}`);
 }
+// ---- Lời chúc (đọc sheet LoiChuc qua ?type=wishes, mới nhất trước) ----
+let wishes = [];
+const wishCard = w => `<div class="wish"><p>${esc(w.message)}</p><b>— ${esc(w.name)}</b></div>`;
+function fillRow(row, list) {
+  row.hidden = !list.length;
+  if (!list.length) return;
+  const html = list.map(wishCard).join("");
+  if (reduceMotion) { row.firstElementChild.innerHTML = html; return; }
+  // Ít lời chúc thì lặp lại cho đủ phủ kín chiều ngang màn hình, rồi nhân đôi để nối vòng liền mạch
+  const cardW = innerWidth <= 560 ? 234 : 274;            // độ rộng thẻ + khoảng cách
+  const reps = Math.max(1, Math.ceil(innerWidth / (list.length * cardW)));
+  const half = html.repeat(reps);
+  row.firstElementChild.innerHTML = half + half;
+  row.style.setProperty("--dur", Math.max(30, list.length * reps * 7) + "s");
+}
+function renderWishes(list) {
+  wishes = list;
+  $("#wishes").hidden = false;
+  $("#wishCount").textContent = list.length ? `${list.length} lời chúc` : "";
+  $("#wishEmpty").hidden = list.length > 0;
+  // Ít lời chúc: 1 hàng; từ 6 trở lên: chia xen kẽ 2 hàng chạy ngược chiều
+  const two = list.length >= 6;
+  fillRow($("#wishRow1"), two ? list.filter((_, i) => i % 2 === 0) : list);
+  fillRow($("#wishRow2"), two ? list.filter((_, i) => i % 2 === 1) : []);
+}
+async function loadWishes() {
+  try {
+    const res = await fetch(CONFIG.rsvpUrl + "?type=wishes");
+    const out = await res.json();
+    if (!out.ok || !Array.isArray(out.wishes)) throw new Error(out.error || "Dữ liệu lời chúc không hợp lệ");
+    renderWishes(out.wishes);
+  } catch (err) {
+    console.error("Không tải được lời chúc:", err);   // giữ phần lời chúc ẩn
+  }
+}
+// Chỉ tải khi khách cuộn gần tới form xác nhận, để không làm chậm lúc mở thiệp
+const wishIO = new IntersectionObserver(entries => {
+  if (entries.some(en => en.isIntersecting)) { wishIO.disconnect(); loadWishes(); }
+}, { rootMargin: "600px" });
+wishIO.observe($("#rsvp"));
+// Điện thoại: chạm vào băng để dừng đọc, chạm lần nữa hoặc chạm ra ngoài để chạy tiếp
+document.addEventListener("pointerdown", e => {
+  const row = e.target.closest(".marquee");
+  document.querySelectorAll(".marquee.paused").forEach(m => { if (m !== row) m.classList.remove("paused"); });
+  if (row && e.pointerType !== "mouse") row.classList.toggle("paused");
+});
+
 $("#rsvpForm").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, msg = $("#formMsg"), btn = $("#rsvpBtn");
@@ -904,11 +994,15 @@ $("#rsvpForm").addEventListener("submit", async e => {
       await postSheet({ type: "rsvp", name, attend: f.attend.value, guests: f.guests.value, side: f.side.value });
       f.dataset.rsvpDone = "1";
     }
-    if (message) await postSheet({ type: "wish", name, message });
+    if (message) {
+      await postSheet({ type: "wish", name, message });
+      renderWishes([{ name, message }, ...wishes]);   // hiện ngay, không cần tải lại trang
+    }
     msg.className = "form-msg ok";
-    msg.textContent = f.attend.value === "Có"
+    msg.textContent = (f.attend.value === "Có"
       ? `Cảm ơn ${name}! Hẹn gặp bạn trong ngày vui nhé ♥`
-      : `Cảm ơn ${name} đã gửi lời chúc ♥`;
+      : `Cảm ơn ${name} đã gửi lời chúc ♥`)
+      + (message ? " Lời chúc của bạn đã hiện bên dưới." : "");
     btn.textContent = "Đã gửi ✓";
     f.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
   } catch (err) {
