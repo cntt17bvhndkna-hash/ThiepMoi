@@ -361,6 +361,8 @@
     filter: drop-shadow(0 2px 6px rgba(201, 162, 122, .35));
     animation: shimmer 3.5s ease-in-out infinite;
   }
+  /* Dòng sau nhỏ hơn và không ngắt dòng, để "nhà" không bị rớt xuống dòng riêng trên điện thoại */
+  .hy-text span { display: block; font-size: .55em; line-height: 1.4; white-space: nowrap; }
   @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 
   /* ---------- Lời chúc bay (kiểu bình luận livestream) ---------- */
@@ -489,7 +491,7 @@
         <div><b id="cdM">00</b><small>Phút</small></div>
         <div><b id="cdS">00</b><small>Giây</small></div>
       </div>
-      <p class="hy-text" id="hy" hidden>Hôm nay<br>chúng mình về chung một nhà</p>
+      <p class="hy-text" id="hy" hidden>Hôm nay<span>chúng mình về chung một nhà</span></p>
     </div>
   </section>
 
