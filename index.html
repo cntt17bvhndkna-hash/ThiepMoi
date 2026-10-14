@@ -354,15 +354,15 @@
   #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
   /* Chữ viết tay mạ vàng hồng, ánh sáng lướt qua chữ */
   .hy-text {
-    font-family: var(--script); font-weight: 400; font-size: clamp(2.8rem, 11vw, 4.4rem); line-height: 1.25;
-    padding: 6px 12px 14px;
+    font-family: var(--script); font-weight: 400; font-size: clamp(3.4rem, 16vw, 5.6rem); line-height: 1.25;
+    padding: 6px 0 14px;
     background: linear-gradient(110deg, var(--rose-deep) 0%, var(--rose-deep) 35%, #e8c48f 48%, #fff3d6 50%, #e8c48f 52%, var(--rose-deep) 65%, var(--rose-deep) 100%);
     background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
     filter: drop-shadow(0 2px 6px rgba(201, 162, 122, .35));
     animation: shimmer 3.5s ease-in-out infinite;
   }
   /* Dòng sau nhỏ hơn và không ngắt dòng, để "nhà" không bị rớt xuống dòng riêng trên điện thoại */
-  .hy-text span { display: block; font-size: clamp(1.7rem, 7.6vw, 3rem); line-height: 1.4; white-space: nowrap; }
+  .hy-text span { display: block; font-size: clamp(2rem, 11.5vw, 4rem); line-height: 1.4; white-space: nowrap; }
   @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 
   /* ---------- Lời chúc bay (kiểu bình luận livestream) ---------- */
