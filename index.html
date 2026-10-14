@@ -489,7 +489,7 @@
         <div><b id="cdM">00</b><small>Phút</small></div>
         <div><b id="cdS">00</b><small>Giây</small></div>
       </div>
-      <p class="hy-text" id="hy" hidden>Chúng mình<br>về chung một nhà</p>
+      <p class="hy-text" id="hy" hidden>Hôm nay<br>chúng mình về chung một nhà</p>
     </div>
   </section>
 
@@ -893,12 +893,14 @@ function showHy() {
   hyShown = true;
   $("#countdown").hidden = true;
   $("#hy").hidden = false;
-  $("#cdEyebrow").textContent = "Hôm nay";
+  $("#cdEyebrow").textContent = "Ngày vui";
   if (document.body.classList.contains("opened")) burstConfetti();   // đếm về 0 ngay lúc khách đang xem
 }
+// Xem thử ?mode=after trước ngày cưới: giả lập đồng hồ như đang ở afterDate để vẫn thấy đếm xuôi
+const clockShift = isAfter ? Math.max(0, new Date(CONFIG.afterDate) - Date.now()) || 0 : 0;
 function tick() {
   if (!isAfter && (Date.now() >= wDate || previewHy)) { showHy(); return; }
-  const diff = Math.abs(wDate - Date.now()) / 1000;
+  const diff = Math.max(0, isAfter ? Date.now() + clockShift - wDate : wDate - Date.now()) / 1000;
   $("#cdD").textContent = pad(Math.floor(diff / 86400));
   $("#cdH").textContent = pad(Math.floor(diff % 86400 / 3600));
   $("#cdM").textContent = pad(Math.floor(diff % 3600 / 60));
