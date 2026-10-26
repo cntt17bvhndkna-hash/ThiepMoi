@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Thiệp cưới Tuấn Sang & Hoàng An</title>
-<meta name="description" content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình.">
+<meta name="description" content="Trân trọng kính mời quý khách đến chung vui cùng gia đình chúng tôi.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Thiệp cưới Tuấn Sang & Hoàng An">
-<meta property="og:description" content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình.">
+<meta property="og:description" content="Trân trọng kính mời quý khách đến chung vui cùng gia đình chúng tôi.">
 <meta property="og:image" content="images/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -71,7 +71,8 @@
     border: 4px solid var(--bg-soft);
   }
   .cover small { letter-spacing: .3em; text-transform: uppercase; font-size: .7rem; color: var(--muted); }
-  .cover h1 { font-family: var(--script); font-weight: 400; font-size: 2.6rem; color: var(--rose-deep); line-height: 1.2; margin: 8px 0 4px; }
+  /* Tên luôn nằm trên một dòng: cỡ chữ co theo bề rộng thẻ (min(440px, 100vw - 48px) trừ 48px padding) */
+  .cover h1 { font-family: var(--script); font-weight: 400; font-size: clamp(1.2rem, calc((min(440px, 100vw - 48px) - 48px) / 10.5), 2.6rem); white-space: nowrap; color: var(--rose-deep); line-height: 1.2; margin: 8px 0 4px; }
   .cover .guest { font-family: var(--serif); font-style: italic; margin: 10px 0 22px; }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -410,7 +411,7 @@
     <img class="cover-photo" data-src="coverPhoto" alt="">
     <small id="coverKicker">Thiệp mời cưới</small>
     <h1 data-text="coupleShort"></h1>
-    <p class="guest" id="guestLine">Trân trọng kính mời bạn</p>
+    <p class="guest" id="guestLine">Trân trọng kính mời quý khách</p>
     <button class="btn pulse" id="openBtn">✉ Mở thiệp</button>
   </div>
 </div>
@@ -436,7 +437,7 @@
   <section class="center">
     <div class="narrow reveal">
       <p class="eyebrow" id="inviteEyebrow">Lời mời</p>
-      <h3 class="title" id="inviteTitle">Chúng mình cưới!</h3>
+      <h3 class="title" id="inviteTitle">Trân trọng báo tin vui</h3>
       <div class="divider">♥</div>
       <p class="invite-text" id="inviteText" data-text="inviteText"></p>
       <div class="families stagger">
@@ -491,7 +492,7 @@
         <div><b id="cdM">00</b><small>Phút</small></div>
         <div><b id="cdS">00</b><small>Giây</small></div>
       </div>
-      <p class="hy-text" id="hy" hidden>Hôm nay<span>chúng mình về chung một nhà</span></p>
+      <p class="hy-text" id="hy" hidden>Hôm nay<span>chúng tôi về chung một nhà</span></p>
     </div>
   </section>
 
@@ -499,7 +500,7 @@
   <section class="center">
     <div class="wrap reveal">
       <p class="eyebrow">Album</p>
-      <h3 class="title" id="galTitle">Khoảnh khắc của chúng mình</h3>
+      <h3 class="title" id="galTitle">Khoảnh khắc của chúng tôi</h3>
       <div class="divider">♥</div>
       <div class="gallery stagger" id="gallery"></div>
     </div>
@@ -515,14 +516,14 @@
       </div>
       <form class="rsvp-card" id="rsvpForm" novalidate>
         <div class="field">
-          <label for="f-name">Họ và tên *</label>
+          <label for="f-name">Khách mời *</label>
           <input type="text" id="f-name" name="name" required autocomplete="name" placeholder="Nguyễn Văn A">
         </div>
         <fieldset class="field" id="attendField">
-          <legend>Bạn sẽ tham dự chứ? *</legend>
+          <legend>Quý khách có thể tham dự không? *</legend>
           <div class="choices">
-            <label><input type="radio" name="attend" value="Có" checked> Chắc chắn rồi, mình sẽ tham gia</label>
-            <label><input type="radio" name="attend" value="Không"> Rất tiếc, mình không tham gia được</label>
+            <label><input type="radio" name="attend" value="Có" checked> Tôi sẽ đến dự</label>
+            <label><input type="radio" name="attend" value="Không"> Rất tiếc, tôi không thể đến dự</label>
           </div>
         </fieldset>
         <div class="row2" id="rsvpRow">
@@ -533,7 +534,7 @@
             </select>
           </div>
           <div class="field">
-            <label for="f-side">Bạn là khách của</label>
+            <label for="f-side">Khách mời của</label>
             <select id="f-side" name="side">
               <option>Nhà trai</option><option>Nhà gái</option><option>Cả hai</option>
             </select>
@@ -541,7 +542,7 @@
         </div>
         <div class="field">
           <label for="f-msg">Lời chúc gửi cô dâu chú rể</label>
-          <textarea id="f-msg" name="message" placeholder="Chúc hai bạn trăm năm hạnh phúc..."></textarea>
+          <textarea id="f-msg" name="message" placeholder="Chúc cô dâu chú rể trăm năm hạnh phúc..."></textarea>
         </div>
         <div class="center">
           <button class="btn" type="submit" id="rsvpBtn">Gửi xác nhận</button>
@@ -555,7 +556,7 @@
   <section class="wishes-sec center" id="wishes" hidden>
     <div class="reveal">
       <p class="eyebrow">Lời chúc</p>
-      <h3 class="title">Gửi đến hai bạn</h3>
+      <h3 class="title">Gửi đến cô dâu chú rể</h3>
       <p class="wish-count" id="wishCount"></p>
     </div>
     <div class="marquee" id="wishRow1"><div class="track"></div></div>
@@ -571,7 +572,7 @@
     </div>
     <div class="thanks-photo" role="img" aria-label="Ảnh cưới"></div>
     <div class="thanks-foot reveal">
-      <p class="thanks-text" id="thanksText">Cảm ơn mọi người vì đã trở thành một phần quan trọng trong ngày đặc biệt này.<br>Rất hân hạnh được đón tiếp!</p>
+      <p class="thanks-text" id="thanksText">Xin chân thành cảm ơn quý khách đã dành thời gian đến chung vui cùng gia đình chúng tôi.<br>Rất hân hạnh được đón tiếp!</p>
       <p class="thanks-sign" data-text="coupleShort"></p>
     </div>
    </div>
@@ -603,9 +604,9 @@ const CONFIG = {
   coupleShort: "Tuấn Sang & Hoàng An",
 
   // Giờ lễ chính, dùng cho đếm ngược (giờ Việt Nam, +07:00)
-  weddingDate: "2026-11-17T15:00:00+07:00",
+  weddingDate: "2026-11-17T17:00:00+07:00",
 
-  inviteText: "Tình yêu đã đưa chúng mình đến với nhau. Trân trọng kính mời bạn đến dự buổi tiệc chung vui cùng gia đình chúng mình. Sự hiện diện của bạn là niềm vinh hạnh của chúng mình!",
+  inviteText: "Trân trọng kính mời quý khách đến dự bữa tiệc chung vui cùng gia đình chúng tôi. Sự hiện diện của quý khách là niềm vinh hạnh cho gia đình chúng tôi!",
 
   groomFather: "Ông Ngô Tuấn Anh",
   groomMother: "Bà Nguyễn Thị Bình",
@@ -631,20 +632,12 @@ const CONFIG = {
   // (xem thử trước bằng index.html?mode=after; xem thử dòng chữ lúc đến giờ lễ bằng ?mode=hy)
   afterDate: "2026-11-18T00:00:00+07:00",
   // Lời cảm ơn thay cho lời mời khi ở chế độ sau đám cưới
-  afterThanksText: "Cảm ơn bạn đã dành thời gian đến chung vui cùng gia đình chúng mình. Sự hiện diện và những lời chúc của bạn đã làm cho ngày trọng đại của chúng mình thêm trọn vẹn!",
+  afterThanksText: "Xin chân thành cảm ơn quý khách đã dành thời gian đến chung vui cùng gia đình chúng tôi. Sự hiện diện và những lời chúc của quý khách đã làm cho ngày trọng đại của chúng tôi thêm trọn vẹn!",
   // Ảnh cưới thật, thêm sau ngày cưới; để trống thì album vẫn dùng "gallery" ở trên
   afterGallery: [],
 
   // Sự kiện — start/end theo giờ Việt Nam
   events: [
-    {
-      name: "Lễ Thành Hôn",
-      start: "2026-11-17T15:00:00+07:00", end: "2026-11-17T16:30:00+07:00",
-      lunar: "", // để trống = tự tính ngày âm lịch
-      place: "Tư gia nhà trai",
-      address: "Khối Tân Phú 2, Phường Vinh Phú, Tỉnh Nghệ An",
-      map: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Khối Tân Phú 2, Vinh Phú, Nghệ An")
-    },
     {
       name: "Tiệc Cưới",
       start: "2026-11-17T17:00:00+07:00", end: "2026-11-17T20:30:00+07:00",
@@ -660,7 +653,7 @@ const CONFIG = {
 
   // Google Apps Script nhận RSVP
   rsvpUrl: "https://script.google.com/macros/s/AKfycbwBJ8z9VsB1jDJr260QuUCCn5QITOeANqLdQmbT4FyTTDIcnp7fl0QfzZVl7ViQQg/exec",
-  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/11/2026 để chúng mình chuẩn bị chu đáo nhất."
+  rsvpDeadline: "Vui lòng phản hồi trước ngày 10/11/2026 để gia đình chúng tôi chuẩn bị chu đáo nhất."
 };
 /* ===================================================================== */
 
@@ -688,22 +681,22 @@ const isAfter = Date.now() >= new Date(CONFIG.afterDate) || params.get("mode") =
 const previewHy = params.get("mode") === "hy";
 if (isAfter) {
   $("#coverKicker").textContent = "Thiệp cảm ơn";
-  $("#guestLine").textContent = `Cảm ơn ${guest || "bạn"} đã đến chung vui`;
+  $("#guestLine").textContent = `Cảm ơn ${guest || "quý khách"} đã đến chung vui`;
   $("#heroEyebrow").textContent = "Just married";
   $("#inviteEyebrow").textContent = "Lời cảm ơn";
-  $("#inviteTitle").textContent = "Cảm ơn bạn!";
+  $("#inviteTitle").textContent = "Trân trọng cảm ơn";
   $("#inviteText").textContent = CONFIG.afterThanksText;
   $("#cdEyebrow").textContent = "Hạnh phúc mỗi ngày";
-  $("#cdTitle").textContent = "Chúng mình đã bên nhau";
+  $("#cdTitle").textContent = "Chúng tôi đã bên nhau";
   if ((CONFIG.afterGallery || []).length) $("#galTitle").textContent = "Khoảnh khắc ngày cưới";
   // Form chỉ còn gửi lời chúc
   $("#rsvpEyebrow").textContent = "Lời chúc";
   $("#rsvpTitle").textContent = "Gửi lời chúc";
-  $("#rsvpNote").textContent = "Cảm ơn bạn đã đến chung vui! Hãy để lại đôi lời chúc cho chúng mình nhé ♥";
+  $("#rsvpNote").textContent = "Cảm ơn quý khách đã đến chung vui! Kính mời quý khách để lại đôi lời chúc cho cô dâu chú rể ♥";
   $("#attendField").hidden = true;
   $("#rsvpRow").hidden = true;
   $("#rsvpBtn").textContent = "Gửi lời chúc";
-  $("#thanksText").innerHTML = "Cảm ơn mọi người đã đến chung vui và gửi những lời chúc tốt đẹp nhất.<br>Chúng mình sẽ luôn trân trọng!";
+  $("#thanksText").innerHTML = "Xin chân thành cảm ơn quý khách đã đến chung vui và gửi những lời chúc tốt đẹp nhất.<br>Gia đình chúng tôi xin ghi nhận và trân trọng!";
 }
 
 const wDate = new Date(CONFIG.weddingDate);
@@ -888,7 +881,7 @@ lb.addEventListener("touchend", e => {
 
 // ---- Countdown ----
 const pad = n => String(n).padStart(2, "0");
-// Đến giờ lễ (trong ngày cưới): thay đồng hồ bằng dòng chữ "Chúng mình về chung một nhà"; sau ngày cưới: đếm xuôi thời gian đã bên nhau
+// Đến giờ lễ (trong ngày cưới): thay đồng hồ bằng dòng chữ "Chúng tôi về chung một nhà"; sau ngày cưới: đếm xuôi thời gian đã bên nhau
 let hyShown = false;
 function showHy() {
   if (hyShown) return;
@@ -1131,13 +1124,13 @@ $("#rsvpForm").addEventListener("submit", async e => {
   const f = e.target, msg = $("#formMsg"), btn = $("#rsvpBtn");
   const nameEl = f.elements.namedItem("name");
   if (!nameEl.value.trim()) {
-    msg.className = "form-msg err"; msg.textContent = "Vui lòng nhập họ tên của bạn.";
+    msg.className = "form-msg err"; msg.textContent = "Vui lòng nhập tên khách mời.";
     nameEl.focus(); return;
   }
   const name = nameEl.value.trim();
   const message = f.elements.namedItem("message").value.trim();
   if (isAfter && !message) {
-    msg.className = "form-msg err"; msg.textContent = "Vui lòng nhập lời chúc của bạn.";
+    msg.className = "form-msg err"; msg.textContent = "Vui lòng nhập lời chúc.";
     f.elements.namedItem("message").focus(); return;
   }
   const btnText = btn.textContent;
@@ -1158,9 +1151,9 @@ $("#rsvpForm").addEventListener("submit", async e => {
     }
     msg.className = "form-msg ok";
     msg.textContent = (!isAfter && f.attend.value === "Có"
-      ? `Cảm ơn ${name}! Hẹn gặp bạn trong ngày vui nhé ♥`
+      ? `Trân trọng cảm ơn ${name}! Rất hân hạnh được đón tiếp quý khách ♥`
       : `Cảm ơn ${name} đã gửi lời chúc ♥`)
-      + (message ? " Lời chúc của bạn đã hiện bên dưới." : "");
+      + (message ? " Lời chúc của quý khách đã hiện bên dưới." : "");
     btn.textContent = "Đã gửi ✓";
     if (!isAfter && f.attend.value === "Có") burstConfetti();
     f.querySelectorAll("input, select, textarea").forEach(el => el.disabled = true);
